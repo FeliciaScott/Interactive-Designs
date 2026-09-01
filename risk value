@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decision Intelligence Simulation Lab | Portfolio App</title>
+
+<style>
+body { margin:0; font-family:Arial; background:#0b1a2a; color:#f5f5f5; }
+header { background:#2b1b12; padding:20px; text-align:center; }
+.container { display:grid; grid-template-columns: repeat(auto-fit,minmax(340px,1fr)); gap:20px; padding:20px; }
+.card { background:#12263a; padding:20px; border-radius:12px; }
+input, textarea, select {
+  width:100%; padding:10px; margin-top:10px;
+  border:none; border-radius:6px;
+  background:#2b1b12; color:#fff;
+}
+button { margin-top:10px; padding:10px; width:100%; background:#3a6ea5; border:none; color:#fff; border-radius:6px; cursor:pointer; }
+.metric { font-size:18px; margin-top:10px; }
+.small { font-size:13px; opacity:0.85; margin-top:8px; line-height:1.4; }
+.resultBlock { margin-top:10px; font-size:14px; line-height:1.5; }
+.history { max-height:180px; overflow-y:auto; font-size:13px; }
+hr { border:0; border-top:1px solid #2b1b12; margin:10px 0; }
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Decision Intelligence Simulation Lab</h1>
+<p>Model decisions, simulate outcomes, and understand the logic behind consequences</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h3>1. Decision Input Layer</h3>
+
+<div class="small">
+This system models decisions as structured variables. Instead of guessing outcomes, you define measurable conditions that influence probability.
+</div>
+
+<input id="decision" placeholder="Decision (e.g. Start SaaS business)">
+
+<select id="domain">
+<option>Business</option>
+<option>Career</option>
+<option>Education</option>
+<option>Personal Development</option>
+<option>Investment</option>
+</select>
+
+<input id="risk" type="number" placeholder="Risk Level (1-10)">
+<input id="time" type="number" placeholder="Time Investment (hours/week)">
+<input id="skill" type="number" placeholder="Skill Level (1-10)">
+<textarea id="notes" placeholder="Context, assumptions, constraints"></textarea>
+
+<button onclick="simulate()">Run Simulation</button>
+</div>
+
+<div class="card">
+<h3>2. Outcome Engine</h3>
+
+<div class="small">
+Outcomes are not predictions—they are weighted simulations based on input variables. Higher skill and time increase success probability, while higher risk introduces volatility.
+</div>
+
+<div class="metric" id="success"></div>
+<div class="metric" id="failure"></div>
+<div class="metric" id="volatility"></div>
+
+<hr>
+
+<div class="resultBlock" id="logicBreakdown"></div>
+
+</div>
+
+<div class="card">
+<h3>3. Impact Analysis Layer</h3>
+
+<div class="small">
+Impact measures the potential magnitude of success or failure, not just probability. High-impact decisions can change trajectory even at lower success rates.
+</div>
+
+<div class="metric" id="impact"></div>
+<div class="metric" id="confidence"></div>
+<div class="metric" id="readiness"></div>
+
+</div>
+
+<div class="card">
+<h3>4. Behavioral Intelligence Insights</h3>
+
+<div class="small">
+This layer interprets patterns in your decision style over time. It identifies whether you tend toward risk avoidance, overconfidence, or under-preparation.
+</div>
+
+<div class="resultBlock" id="insights"></div>
+</div>
+
+<div class="card">
+<h3>5. Simulation History</h3>
+<div class="history" id="history"></div>
+<button onclick="clearHistory()">Clear History</button>
+</div>
+
+<div class="card">
+<h3>6. Documentation: Why This System Exists</h3>
+
+<div class="resultBlock">
+Most people make decisions emotionally or based on incomplete information. This system replaces intuition-only thinking with structured reasoning.
+
+<hr>
+
+<b>Core Purpose:</b>
+- Convert abstract decisions into measurable variables
+- Simulate possible outcomes before commitment
+- Reduce impulsive decision-making
+- Improve long-term strategic thinking
+
+<hr>
+
+<b>Design Philosophy:</b>
+This tool does not claim to predict the future. Instead, it models probability distributions based on input constraints.
+
+Each decision is treated as a system:
+<ul>
+<li>Inputs = risk, time, skill, domain</li>
+<li>Process = weighted probability engine</li>
+<li>Output = success/failure likelihood + impact score</li>
+</ul>
+
+<hr>
+
+<b>Intended Use Case:</b>
+- Entrepreneurs evaluating ideas
+- Students choosing learning paths
+- Professionals assessing career moves
+- Individuals testing life decisions before committing
+
+<hr>
+
+<b>Important Limitation:</b>
+This system does not account for unpredictable external events (market shifts, human randomness, timing effects). It is a structured thinking aid—not a deterministic predictor.
+</div>
+
+</div>
+
+</div>
+
+<script>
+let historyData = JSON.parse(localStorage.getItem('decisions_v2')||'[]');
+
+function simulate(){
+ let decision = document.getElementById('decision').value;
+ let domain = document.getElementById('domain').value;
+ let risk = Number(document.getElementById('risk').value);
+ let time = Number(document.getElementById('time').value);
+ let skill = Number(document.getElementById('skill').value);
+ let notes = document.getElementById('notes').value;
+
+ if(!decision || !risk || !time || !skill) return alert('Complete all fields');
+
+ let base = 50;
+ let success = Math.max(0, Math.min(100,
+   base + (skill*4) + (time*1.5) - (risk*5)
+ ));
+
+ let failure = 100 - success;
+ let volatility = Math.min(100, risk*10 + (10-skill)*5);
+
+ let impact = Math.round((time * risk * skill)/3);
+ let confidence = Math.round((skill*10 + (100-risk))/2);
+ let readiness = Math.round((skill*6 + time*2)/2);
+
+ document.getElementById('success').innerText = "Success Probability: " + success + "%";
+ document.getElementById('failure').innerText = "Failure Probability: " + failure + "%";
+ document.getElementById('volatility').innerText = "Volatility Index: " + volatility;
+ document.getElementById('impact').innerText = "Impact Score: " + impact;
+ document.getElementById('confidence').innerText = "Confidence Level: " + confidence + "%";
+ document.getElementById('readiness').innerText = "Readiness Score: " + readiness + "%";
+
+ document.getElementById('logicBreakdown').innerHTML =
+ "Success increases with skill and time investment, and decreases with risk exposure. Volatility measures unpredictability introduced by high risk and low skill alignment.";
+
+ let insight = "";
+ if(skill < 4) insight += "Low skill baseline increases uncertainty.<br>";
+ if(risk > 7) insight += "High risk behavior detected—results may vary significantly.<br>";
+ if(time < 5) insight += "Low time investment reduces outcome stability.<br>";
+ if(success > 70) insight += "Decision structure is strong and well-balanced.<br>";
+
+ document.getElementById('insights').innerHTML = insight;
+
+ historyData.push({decision, domain, risk, time, skill, success, impact, date:new Date().toISOString()});
+ localStorage.setItem('decisions_v2', JSON.stringify(historyData));
+ renderHistory();
+}
+
+function renderHistory(){
+ let div = document.getElementById('history');
+ div.innerHTML = '';
+ historyData.slice().reverse().forEach(d=>{
+  let el = document.createElement('div');
+  el.innerText = `${d.date.split('T')[0]} | ${d.decision} | S:${d.success}% | I:${d.impact}`;
+  div.appendChild(el);
+ });
+}
+
+function clearHistory(){
+ localStorage.removeItem('decisions_v2');
+ historyData = [];
+ renderHistory();
+}
+
+renderHistory();
+</script>
+
+</body>
+</html>
