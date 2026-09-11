@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PathKeeper | Career Recovery & Resilience Quest</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#2D241E;
+    color:#E6DFD5;
+    line-height:1.7;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+button{
+    font-family:inherit;
+}
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+}
+
+/* =========================
+   XP BAR
+========================= */
+
+.xp-header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:#120E0C;
+    border-bottom:1px solid #4A3E36;
+    padding:12px 0;
+    box-shadow:0 4px 20px rgba(0,0,0,.25);
+}
+
+.xp-header-inner{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.logo{
+    font-weight:900;
+    color:#D4A373;
+    letter-spacing:1px;
+    white-space:nowrap;
+}
+
+.player-stats{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.level-badge{
+    background:#588157;
+    color:#fff;
+    padding:6px 14px;
+    border-radius:30px;
+    font-weight:bold;
+    font-size:.9rem;
+}
+
+.xp-area{
+    width:180px;
+}
+
+.xp-label{
+    display:flex;
+    justify-content:space-between;
+    font-size:.75rem;
+    color:#C2B8AE;
+    margin-bottom:3px;
+}
+
+.xp-bar{
+    height:8px;
+    background:#362F29;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.xp-fill{
+    width:0%;
+    height:100%;
+    background:#D4A373;
+    border-radius:20px;
+    transition:width:.5s ease;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    background:#221B16;
+    color:#F5EBE6;
+    padding:90px 0 100px;
+    border-bottom:3px solid #8C6239;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+}
+
+.hero:before{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    border:1px solid rgba(212,163,115,.08);
+    border-radius:50%;
+    top:-250px;
+    left:-150px;
+}
+
+.hero:after{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    border:1px solid rgba(88,129,87,.08);
+    border-radius:50%;
+    bottom:-300px;
+    right:-150px;
+}
+
+.hero-content{
+    max-width:850px;
+    margin:auto;
+    position:relative;
+    z-index:2;
+}
+
+.eyebrow{
+    display:inline-block;
+    color:#A3B18A;
+    font-size:.85rem;
+    font-weight:bold;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin-bottom:18px;
+}
+
+.hero h1{
+    font-size:3.3rem;
+    line-height:1.15;
+    margin-bottom:25px;
+    color:#D4A373;
+}
+
+.hero p{
+    font-size:1.2rem;
+    margin-bottom:35px;
+    color:#E6DFD5;
+}
+
+.hero-actions{
+    margin-bottom:45px;
+}
+
+.button{
+    display:inline-block;
+    background:#588157;
+    color:#FFFFFF;
+    padding:15px 32px;
+    border-radius:50px;
+    font-weight:bold;
+    transition:.3s;
+    border:1px solid #A3B18A;
+    margin:5px 8px;
+    cursor:pointer;
+}
+
+.button:hover{
+    background:#3A5A40;
+    transform:translateY(-3px);
+}
+
+.button-secondary{
+    background:transparent;
+    color:#D4A373;
+    border:1px solid #D4A373;
+}
+
+.button-secondary:hover{
+    background:#362F29;
+    color:#FFFFFF;
+}
+
+/* =========================
+   PLAYER DASHBOARD
+========================= */
+
+.dashboard{
+    background:#362F29;
+    border-top:1px solid #4A3E36;
+    border-bottom:1px solid #4A3E36;
+    padding:30px 0;
+}
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr 1fr 1fr;
+    gap:18px;
+}
+
+.dashboard-card{
+    background:#221B16;
+    border:1px solid #4A3E36;
+    border-radius:15px;
+    padding:22px;
+}
+
+.dashboard-card small{
+    color:#A39B90;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    font-size:.7rem;
+}
+
+.dashboard-card h3{
+    color:#D4A373;
+    font-size:1.8rem;
+    margin-top:4px;
+}
+
+.dashboard-card p{
+    color:#C2B8AE;
+    font-size:.9rem;
+}
+
+.recovery-score{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.score-circle{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    border:4px solid #588157;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.2rem;
+    font-weight:bold;
+    color:#D4A373;
+}
+
+/* =========================
+   WATERMARK
+========================= */
+
+.watermark-background{
+    background-color:#2D241E;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320' viewBox='0 0 320 320'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-weight='900' font-size='28' fill='%23D4A373' fill-opacity='0.035' transform='rotate(-25 160 160)'%3EPATHKEEPER%3C/text%3E%3C/svg%3E");
+    background-repeat:repeat;
+    background-position:center;
+}
+
+/* =========================
+   SECTION
+========================= */
+
+section{
+    padding:85px 0;
+}
+
+.section-title{
+    font-size:2.4rem;
+    text-align:center;
+    margin-bottom:15px;
+    color:#D4A373;
+}
+
+.subtitle{
+    text-align:center;
+    max-width:750px;
+    margin:0 auto 50px;
+    color:#C2B8AE;
+}
+
+/* =========================
+   DAILY MISSION
+========================= */
+
+.mission-section{
+    background:#221B16;
+}
+
+.mission{
+    max-width:850px;
+    margin:auto;
+    background:#2D241E;
+    border:2px solid #588157;
+    border-radius:20px;
+    padding:35px;
+    position:relative;
+    overflow:hidden;
+}
+
+.mission:after{
+    content:"DAILY QUEST";
+    position:absolute;
+    right:-35px;
+    top:25px;
+    transform:rotate(35deg);
+    background:#588157;
+    color:#fff;
+    padding:6px 40px;
+    font-size:.7rem;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.mission-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.mission-label{
+    color:#A3B18A;
+    font-size:.8rem;
+    font-weight:bold;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.xp-reward{
+    color:#D4A373;
+    font-weight:bold;
+}
+
+.mission h3{
+    color:#F5EBE6;
+    font-size:1.6rem;
+    margin-bottom:8px;
+}
+
+.mission p{
+    color:#C2B8AE;
+    margin-bottom:20px;
+}
+
+.mission-button{
+    border:0;
+    background:#588157;
+    color:#fff;
+    padding:12px 22px;
+    border-radius:30px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.mission-button:hover{
+    background:#3A5A40;
+}
+
+.mission-button.completed{
+    background:#4A3E36;
+    color:#A3B18A;
+    cursor:default;
+}
+
+/* =========================
+   QUEST LIBRARY
+========================= */
+
+.quest-card{
+    background:#362F29;
+    padding:30px;
+    border-radius:18px;
+    border:1px solid #4A3E36;
+    position:relative;
+    transition:.3s;
+    cursor:pointer;
+}
+
+.quest-card:hover{
+    transform:translateY(-6px);
+    border-color:#588157;
+    box-shadow:0 12px 30px rgba(0,0,0,.25);
+}
+
+.quest-card.completed{
+    border-color:#588157;
+    opacity:.78;
+}
+
+.quest-icon{
+    width:48px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#221B16;
+    border-radius:12px;
+    margin-bottom:18px;
+    font-size:1.4rem;
+}
+
+.quest-card h3{
+    color:#D4A373;
+    margin-bottom:10px;
+}
+
+.quest-card p{
+    color:#C2B8AE;
+    margin-bottom:20px;
+    font-size:.95rem;
+}
+
+.quest-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-top:1px solid #4A3E36;
+    padding-top:15px;
+}
+
+.quest-xp{
+    color:#A3B18A;
+    font-weight:bold;
+    font-size:.9rem;
+}
+
+.quest-status{
+    font-size:.75rem;
+    color:#A39B90;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.quest-card.completed .quest-status{
+    color:#A3B18A;
+}
+
+/* =========================
+   LEVEL PATH
+========================= */
+
+.level-path{
+    background:#221B16;
+}
+
+.path{
+    max-width:1000px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.path-stage{
+    position:relative;
+    text-align:center;
+    padding:30px 20px;
+    background:#362F29;
+    border:1px solid #4A3E36;
+    border-radius:18px;
+}
+
+.path-stage.active{
+    border:2px solid #588157;
+    box-shadow:0 0 25px rgba(88,129,87,.12);
+}
+
+.path-number{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    background:#221B16;
+    border:2px solid #D4A373;
+    color:#D4A373;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 15px;
+    font-weight:bold;
+}
+
+.path-stage h3{
+    color:#D4A373;
+    margin-bottom:8px;
+}
+
+.path-stage p{
+    color:#C2B8AE;
+    font-size:.9rem;
+}
+
+/* =========================
+   ACHIEVEMENTS
+========================= */
+
+.achievements{
+    background:#2D241E;
+}
+
+.badges{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.badge{
+    text-align:center;
+    background:#362F29;
+    padding:25px 15px;
+    border-radius:15px;
+    border:1px solid #4A3E36;
+    opacity:.4;
+    transition:.3s;
+}
+
+.badge.unlocked{
+    opacity:1;
+    border-color:#D4A373;
+}
+
+.badge-icon{
+    font-size:2.3rem;
+    margin-bottom:10px;
+    filter:grayscale(1);
+}
+
+.badge.unlocked .badge-icon{
+    filter:none;
+}
+
+.badge h3{
+    color:#D4A373;
+    font-size:1rem;
+    margin-bottom:5px;
+}
+
+.badge p{
+    color:#A39B90;
+    font-size:.8rem;
+}
+
+/* =========================
+   MANIFESTO
+========================= */
+
+.manifesto{
+    background:#221B16;
+    border-top:1px solid #4A3E36;
+    border-bottom:1px solid #4A3E36;
+}
+
+.manifesto-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+    align-items:center;
+}
+
+.manifesto-box{
+    background:#2D241E;
+    padding:45px;
+    border-radius:20px;
+    border:2px solid #588157;
+}
+
+.manifesto-box h3{
+    color:#D4A373;
+    font-size:1.8rem;
+    margin-bottom:20px;
+}
+
+.manifesto-box p{
+    color:#C2B8AE;
+    margin-bottom:15px;
+}
+
+.manifesto-text h2{
+    font-size:2.2rem;
+    margin-bottom:20px;
+    color:#D4A373;
+}
+
+.manifesto-text p{
+    margin-bottom:20px;
+    color:#C2B8AE;
+}
+
+/* =========================
+   PROCESS
+========================= */
+
+.steps{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:30px;
+}
+
+.step{
+    background:#362F29;
+    color:#E6DFD5;
+    padding:30px;
+    border-radius:15px;
+    border:1px solid #588157;
+}
+
+.number{
+    font-size:2.6rem;
+    font-weight:bold;
+    color:#D4A373;
+    margin-bottom:15px;
+}
+
+.step h3{
+    margin-bottom:8px;
+}
+
+.step p{
+    color:#C2B8AE;
+}
+
+/* =========================
+   TESTIMONIALS
+========================= */
+
+.testimonials{
+    background:#221B16;
+}
+
+.quote{
+    background:#362F29;
+    padding:35px;
+    border-radius:15px;
+    border:1px solid #4A3E36;
+}
+
+.quote p{
+    font-style:italic;
+    margin-bottom:18px;
+    color:#E6DFD5;
+}
+
+.quote strong{
+    color:#D4A373;
+    display:block;
+    margin-top:10px;
+}
+
+/* =========================
+   CTA
+========================= */
+
+.cta{
+    background:#1A1512;
+    color:#E6DFD5;
+    text-align:center;
+    border-top:2px solid #588157;
+}
+
+.cta h2{
+    font-size:2.6rem;
+    margin-bottom:20px;
+    color:#D4A373;
+}
+
+.cta p{
+    max-width:700px;
+    margin:0 auto 35px;
+    color:#C2B8AE;
+}
+
+/* =========================
+   XP POPUP
+========================= */
+
+.xp-popup{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    background:#588157;
+    color:#fff;
+    padding:15px 22px;
+    border-radius:12px;
+    font-weight:bold;
+    box-shadow:0 10px 30px rgba(0,0,0,.4);
+    transform:translateY(120px);
+    opacity:0;
+    transition:.4s;
+    z-index:2000;
+}
+
+.xp-popup.show{
+    transform:translateY(0);
+    opacity:1;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:900px){
+
+    .hero h1{
+        font-size:2.5rem;
+    }
+
+    .dashboard-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .manifesto-grid{
+        grid-template-columns:1fr;
+    }
+
+    .path{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .badges{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .steps{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:600px){
+
+    .xp-header-inner{
+        flex-direction:column;
+        align-items:stretch;
+        gap:8px;
+    }
+
+    .player-stats{
+        justify-content:space-between;
+    }
+
+    .xp-area{
+        width:140px;
+    }
+
+    .hero{
+        padding:70px 0;
+    }
+
+    .hero h1{
+        font-size:2rem;
+    }
+
+    .hero p{
+        font-size:1rem;
+    }
+
+    .dashboard-grid{
+        grid-template-columns:1fr;
+    }
+
+    .section-title{
+        font-size:2rem;
+    }
+
+    .path,
+    .badges,
+    .steps{
+        grid-template-columns:1fr;
+    }
+
+    .mission{
+        padding:25px;
+    }
+
+    .button{
+        display:block;
+        margin:10px auto;
+        max-width:280px;
+    }
+
+    .xp-popup{
+        right:15px;
+        bottom:15px;
+        left:15px;
+        text-align:center;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     PLAYER BAR
+========================= -->
+
+<header class="xp-header">
+    <div class="xp-header-inner">
+
+        <div class="logo">
+            PATHKEEPER
+        </div>
+
+        <div class="player-stats">
+
+            <div class="level-badge" id="levelBadge">
+                LEVEL 1
+            </div>
+
+            <div class="xp-area">
+                <div class="xp-label">
+                    <span>XP</span>
+                    <span id="xpText">0 / 100</span>
+                </div>
+
+                <div class="xp-bar">
+                    <div class="xp-fill" id="xpFill"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</header>
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<header class="hero">
+
+    <div class="container hero-content">
+
+        <span class="eyebrow">
+            YOUR CAREER RECOVERY QUEST
+        </span>
+
+        <h1>
+            Rebuild Your Path.<br>
+            One Mission at a Time.
+        </h1>
+
+        <p>
+            PathKeeper turns free career knowledge into a structured progression system.
+            Complete missions, build evidence, develop skills, and earn XP as you move
+            from uncertainty toward professional capability.
+        </p>
+
+        <div class="hero-actions">
+
+            <a href="#missions" class="button">
+                Start My Quest
+            </a>
+
+            <a href="about.html" class="button button-secondary">
+                Understand the Mission
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================
+     PLAYER DASHBOARD
+========================= -->
+
+<section class="dashboard">
+
+    <div class="container">
+
+        <div class="dashboard-grid">
+
+            <div class="dashboard-card recovery-score">
+
+                <div class="score-circle" id="scoreCircle">
+                    0%
+                </div>
+
+                <div>
+                    <small>Career Recovery</small>
+                    <h3 id="scoreText">0%</h3>
+                    <p>Complete quests to increase your score.</p>
+                </div>
+
+            </div>
+
+            <div class="dashboard-card">
+                <small>Quests Completed</small>
+                <h3 id="completedText">0 / 8</h3>
+                <p>Keep progressing.</p>
+            </div>
+
+            <div class="dashboard-card">
+                <small>Current Streak</small>
+                <h3 id="streakText">0 🔥</h3>
+                <p>Return and keep building.</p>
+            </div>
+
+            <div class="dashboard-card">
+                <small>Badges</small>
+                <h3 id="badgeText">0 / 4</h3>
+                <p>Achievements unlocked.</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     DAILY MISSION
+========================= -->
+
+<section class="mission-section" id="missions">
+
+    <div class="container">
+
+        <h2 class="section-title">
+            Today's Mission
+        </h2>
+
+        <p class="subtitle">
+            You do not need to rebuild everything today. Complete one useful action.
+        </p>
+
+        <div class="mission">
+
+            <div class="mission-top">
+                <span class="mission-label">
+                    Daily Quest
+                </span>
+
+                <span class="xp-reward">
+                    +25 XP
+                </span>
+            </div>
+
+            <h3 id="dailyMissionTitle">
+                Choose one career problem you need to solve.
+            </h3>
+
+            <p id="dailyMissionDescription">
+                Write down the problem in one sentence. Clear problems are easier
+                to investigate, measure, and solve.
+            </p>
+
+            <button
+                class="mission-button"
+                id="dailyMissionButton"
+                onclick="completeDailyMission()">
+                Complete Mission
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     QUEST LIBRARY
+========================= -->
+
+<section class="watermark-background">
+
+    <div class="container">
+
+        <h2 class="section-title">
+            Career Recovery Quest Board
+        </h2>
+
+        <p class="subtitle">
+            Each resource is a quest. Complete them in any order, collect XP,
+            and gradually build a stronger professional position.
+        </p>
+
+        <div class="grid">
+
+            <div class="quest-card" data-id="postmortem">
+
+                <div class="quest-icon">🔎</div>
+
+                <h3>Failure Post-Mortem</h3>
+
+                <p>
+                    Deconstruct a previous setback, identify root variables,
+                    and turn experience into usable information.
+                </p>
+
+                <div class="quest-footer">
+                    <span class="quest-xp">+50 XP</span>
+                    <span class="quest-status">Start Quest</span>
+                </div>
+
+            </div>
+
+
+            <div class="quest-card" data-id="skills">
+
+                <div class="quest-icon">🧭</div>
+
+                <h3>Skill Roadmap</h3>
+
+                <p>
+                    Choose a high-leverage capability and create a practical
+                    learning path around it.
+                </p>
+
+                <div class="quest-footer">
+                    <span class="quest-xp">+75 XP</span>
+                    <span class="quest-status">Start Quest</span>
+                </div>
+
+            </div>
+
+
+            <div class="quest-card" data-id="evidence">
+
+                <div class="quest-icon">📁</div>
+
+                <h3>Evidence Artifact</h3>
+
+                <p>
+                    Turn a project, case study, or completed task into
+                    verifiable proof of your capabilities.
+                </p>
+
+                <div class="quest-footer">
+                    <span class="quest-xp">+100 XP</span>
+                    <span class="quest-status">Start Quest</span>
+                </div>
+
+            </div>
+
+
+            <div class="quest-card" data-id="risk">
+
+                <div class="quest-icon">🛡️</div>
+
+                <h3>Risk Mitigation</h3>
+
+                <p>
+                    Identify threats to your career transition and create
+                    practical ways to reduce exposure.
+                </p>
+
+                <div class="quest-footer">
+                    <span class="quest-xp">+50 XP</span>
+                    <span class="quest-status">Start Quest</span>
+                </div>
+
+            </div>
+
+
+            <div class="quest-card" data-id="capital">
+
+                <div class="quest-icon">💰</div>
+
+                <h3>Capital Allocation</h3>
+
+                <p>
+                    Examine your available resources and decide where limited
+                    money, time, and attention should go.
+                </p>
+
+                <div class="quest-footer">
+                    <span class="quest-xp">+75 XP</span>
+                    <span class="quest-status">Start Quest</span>
+                </div>
+
+            </div>
+
+
+            <div class="quest-card" data-id="resilience">
+
+                <div class="quest-icon">⚙️</div>
+
+                <h3>Resilience Primer</h3>
+
+                <p>
+                    Build systems that help you adapt when plans fail,
+                    opportunities disappear, or conditions change.
+                </p>
+
+                <div class="quest-footer">
+                    <span class="quest-xp">+75 XP</span>
+                    <span class="quest-status">Start Quest</span>
+                </div>
+
+            </div>
+
+
+            <div class="quest-card" data-id="repository">
+
+                <div class="quest-icon">💻</div>
+
+                <h3>Public Repository</h3>
+
+                <p>
+                    Explore codebases, templates, dashboards, and other
+                    public resources that can accelerate your learning.
+                </p>
+
+                <div class="quest-footer">
+                    <span class="quest-xp">+100 XP</span>
+                    <span class="quest-status">Start Quest</span>
+                </div>
+
+            </div>
+
+
+            <div class="quest-card" data-id="community">
+
+                <div class="quest-icon">🌐</div>
+
+                <h3>Community Archive</h3>
+
+                <p>
+                    Study field notes and lessons from other people navigating
+                    professional change.
+                </p>
+
+                <div class="quest-footer">
+                    <span class="quest-xp">+50 XP</span>
+                    <span class="quest-status">Start Quest</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PATH PROGRESSION
+========================= -->
+
+<section class="level-path">
+
+    <div class="container">
+
+        <h2 class="section-title">
+            The PathKeeper Progression
+        </h2>
+
+        <p class="subtitle">
+            Career recovery becomes easier to understand when it is treated
+            as a sequence of increasingly valuable actions.
+        </p>
+
+        <div class="path">
+
+            <div class="path-stage active" id="stage1">
+                <div class="path-number">01</div>
+                <h3>Assess</h3>
+                <p>
+                    Understand your position, identify friction, and establish
+                    what needs to change.
+                </p>
+            </div>
+
+            <div class="path-stage" id="stage2">
+                <div class="path-number">02</div>
+                <h3>Build</h3>
+                <p>
+                    Develop skills, projects, systems, and evidence.
+                </p>
+            </div>
+
+            <div class="path-stage" id="stage3">
+                <div class="path-number">03</div>
+                <h3>Execute</h3>
+                <p>
+                    Put your capabilities into the market and pursue opportunities.
+                </p>
+            </div>
+
+            <div class="path-stage" id="stage4">
+                <div class="path-number">04</div>
+                <h3>Contribute</h3>
+                <p>
+                    Share knowledge and strengthen the ecosystem for others.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     ACHIEVEMENTS
+========================= -->
+
+<section class="achievements">
+
+    <div class="container">
+
+        <h2 class="section-title">
+            Achievement Board
+        </h2>
+
+        <p class="subtitle">
+            Progress is easier to maintain when you can see what you have already accomplished.
+        </p>
+
+        <div class="badges">
+
+            <div class="badge" id="badgeFirst">
+                <div class="badge-icon">🏁</div>
+                <h3>First Step</h3>
+                <p>Complete your first quest.</p>
+            </div>
+
+            <div class="badge" id="badgeBuilder">
+                <div class="badge-icon">🔨</div>
+                <h3>Builder</h3>
+                <p>Complete 3 quests.</p>
+            </div>
+
+            <div class="badge" id="badgeStrategist">
+                <div class="badge-icon">🧠</div>
+                <h3>Strategist</h3>
+                <p>Complete 5 quests.</p>
+            </div>
+
+            <div class="badge" id="badgePathkeeper">
+                <div class="badge-icon">🏆</div>
+                <h3>PathKeeper</h3>
+                <p>Complete every quest.</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     MANIFESTO
+========================= -->
+
+<section class="manifesto">
+
+    <div class="container manifesto-grid">
+
+        <div class="manifesto-box">
+
+            <h3>
+                Core Design Principle
+            </h3>
+
+            <p>
+                <strong>Systemic Agility:</strong>
+                Career stability does not come from perfectly following
+                one predetermined ladder.
+            </p>
+
+            <p>
+                It comes from building portable skills, useful evidence,
+                adaptable systems, and the ability to respond intelligently
+                when circumstances change.
+            </p>
+
+        </div>
+
+        <div class="manifesto-text">
+
+            <h2>
+                Knowledge Should Be Open.
+                Progress Should Be Visible.
+            </h2>
+
+            <p>
+                When professionals experience layoffs, failed projects,
+                industry changes, or difficult transitions, they often need
+                practical guidance more than another expensive course.
+            </p>
+
+            <p>
+                PathKeeper organizes that knowledge into missions so that
+                people can move from information to action.
+            </p>
+
+            <p>
+                The goal is not to create dependency on the platform.
+                The goal is to help people become more capable without it.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     FOUR STEP SYSTEM
+========================= -->
+
+<section style="background:#2D241E;">
+
+    <div class="container">
+
+        <h2 class="section-title">
+            How the Game Works
+        </h2>
+
+        <p class="subtitle">
+            The system rewards useful progress rather than passive consumption.
+        </p>
+
+        <div class="steps">
+
+            <div class="step">
+                <div class="number">01</div>
+                <h3>Assess</h3>
+                <p>
+                    Identify your current position and determine the biggest
+                    constraint affecting your progress.
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="number">02</div>
+                <h3>Build</h3>
+                <p>
+                    Develop skills and create tangible evidence that demonstrates
+                    what you can actually do.
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="number">03</div>
+                <h3>Execute</h3>
+                <p>
+                    Apply your skills to real problems, opportunities,
+                    applications, projects, and professional situations.
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="number">04</div>
+                <h3>Contribute</h3>
+                <p>
+                    Share useful knowledge so another person can move faster
+                    because you completed your journey.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     TESTIMONIALS
+========================= -->
+
+<section class="testimonials">
+
+    <div class="container">
+
+        <h2 class="section-title">
+            Community Feedback
+        </h2>
+
+        <p class="subtitle">
+            Examples of how people might use the library during professional transitions.
+        </p>
+
+        <div class="grid">
+
+            <div class="quote">
+                <p>
+                    "Finding a platform that offers high-level strategic frameworks
+                    completely free of charge was a massive relief during my job transition."
+                </p>
+                <strong>— Open Source Learner</strong>
+            </div>
+
+            <div class="quote">
+                <p>
+                    "The post-mortem templates helped me objectively analyze my failed
+                    project without commercial noise or marketing fluff."
+                </p>
+                <strong>— Independent Creator</strong>
+            </div>
+
+            <div class="quote">
+                <p>
+                    "Clear, grounded, and completely open. It provided the structure
+                    I needed to rebuild my professional portfolio."
+                </p>
+                <strong>— Career Transitioner</strong>
+            </div>
+
+            <div class="quote">
+                <p>
+                    "Having direct access to community-built resources changed how
+                    I approach skill acquisition and risk management."
+                </p>
+                <strong>— Systems Engineer</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CTA
+========================= -->
+
+<section class="cta">
+
+    <div class="container">
+
+        <h2>
+            Your Next Level Starts With One Quest.
+        </h2>
+
+        <p>
+            No paywalls. No complicated onboarding. Choose one mission,
+            complete it, and start building evidence that you are moving forward.
+        </p>
+
+        <a href="library.html" class="button">
+            Enter the Full Library
+        </a>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <p>
+        © 2026 PathKeeper • A Free, Open-Source Public Knowledge Library
+    </p>
+
+</footer>
+
+
+<!-- XP NOTIFICATION -->
+
+<div class="xp-popup" id="xpPopup">
+    +50 XP Earned!
+</div>
+
+
+<script>
+
+/* ==========================================
+   PATHKEEPER GAME SYSTEM
+========================================== */
+
+const questXP = {
+    postmortem:50,
+    skills:75,
+    evidence:100,
+    risk:50,
+    capital:75,
+    resilience:75,
+    repository:100,
+    community:50
+};
+
+const savedXP = parseInt(localStorage.getItem("pathkeeperXP")) || 0;
+
+const savedQuests =
+    JSON.parse(localStorage.getItem("pathkeeperQuests")) || [];
+
+let xp = savedXP;
+let completedQuests = savedQuests;
+
+let dailyComplete =
+    localStorage.getItem("pathkeeperDaily") === "true";
+
+let streak =
+    parseInt(localStorage.getItem("pathkeeperStreak")) || 0;
+
+
+/* ==========================================
+   LEVEL SYSTEM
+========================================== */
+
+function getLevel(){
+
+    return Math.floor(xp / 100) + 1;
+
+}
+
+function getCurrentLevelXP(){
+
+    return xp % 100;
+
+}
+
+
+/* ==========================================
+   UPDATE DASHBOARD
+========================================== */
+
+function updateDashboard(){
+
+    const level = getLevel();
+    const levelXP = getCurrentLevelXP();
+
+    document.getElementById("levelBadge").textContent =
+        "LEVEL " + level;
+
+    document.getElementById("xpText").textContent =
+        levelXP + " / 100";
+
+    document.getElementById("xpFill").style.width =
+        levelXP + "%";
+
+
+    document.getElementById("completedText").textContent =
+        completedQuests.length + " / 8";
+
+
+    document.getElementById("streakText").textContent =
+        streak + " 🔥";
+
+
+    const score =
+        Math.round((completedQuests.length / 8) * 100);
+
+    document.getElementById("scoreText").textContent =
+        score + "%";
+
+    document.getElementById("scoreCircle").textContent =
+        score + "%";
+
+
+    updateBadges();
+
+    updatePath();
+
+}
+
+
+/* ==========================================
+   ADD XP
+========================================== */
+
+function addXP(amount){
+
+    const oldLevel = getLevel();
+
+    xp += amount;
+
+    localStorage.setItem(
+        "pathkeeperXP",
+        xp
+    );
+
+    const newLevel = getLevel();
+
+    showXPPopup(
+        "+" + amount + " XP Earned!"
+    );
+
+    if(newLevel > oldLevel){
+
+        setTimeout(function(){
+
+            showXPPopup(
+                "🎉 LEVEL UP! You reached Level " +
+                newLevel + "!"
+            );
+
+        },700);
+
+    }
+
+    updateDashboard();
+
+}
+
+
+/* ==========================================
+   XP POPUP
+========================================== */
+
+function showXPPopup(message){
+
+    const popup =
+        document.getElementById("xpPopup");
+
+    popup.textContent = message;
+
+    popup.classList.add("show");
+
+    setTimeout(function(){
+
+        popup.classList.remove("show");
+
+    },2200);
+
+}
+
+
+/* ==========================================
+   QUEST COMPLETION
+========================================== */
+
+document.querySelectorAll(".quest-card").forEach(card => {
+
+    const id = card.dataset.id;
+
+    if(completedQuests.includes(id)){
+
+        markQuestComplete(card);
+
+    }
+
+
+    card.addEventListener("click",function(){
+
+        if(completedQuests.includes(id)){
+            return;
+        }
+
+        completedQuests.push(id);
+
+        localStorage.setItem(
+            "pathkeeperQuests",
+            JSON.stringify(completedQuests)
+        );
+
+        markQuestComplete(card);
+
+        addXP(questXP[id]);
+
+    });
+
+});
+
+
+function markQuestComplete(card){
+
+    card.classList.add("completed");
+
+    const status =
+        card.querySelector(".quest-status");
+
+    status.textContent =
+        "✓ Completed";
+
+}
+
+
+/* ==========================================
+   DAILY MISSION
+========================================== */
+
+if(dailyComplete){
+
+    const button =
+        document.getElementById("dailyMissionButton");
+
+    button.textContent =
+        "✓ Mission Completed";
+
+    button.classList.add("completed");
+
+    button.disabled = true;
+
+}
+
+
+function completeDailyMission(){
+
+    if(dailyComplete){
+        return;
+    }
+
+    dailyComplete = true;
+
+    localStorage.setItem(
+        "pathkeeperDaily",
+        "true"
+    );
+
+    streak++;
+
+    localStorage.setItem(
+        "pathkeeperStreak",
+        streak
+    );
+
+    const button =
+        document.getElementById("dailyMissionButton");
+
+    button.textContent =
+        "✓ Mission Completed";
+
+    button.classList.add("completed");
+
+    button.disabled = true;
+
+    addXP(25);
+
+}
+
+
+/* ==========================================
+   BADGES
+========================================== */
+
+function updateBadges(){
+
+    const count =
+        completedQuests.length;
+
+    let badges = 0;
+
+
+    if(count >= 1){
+
+        document
+            .getElementById("badgeFirst")
+            .classList.add("unlocked");
+
+        badges++;
+
+    }
+
+
+    if(count >= 3){
+
+        document
+            .getElementById("badgeBuilder")
+            .classList.add("unlocked");
+
+        badges++;
+
+    }
+
+
+    if(count >= 5){
+
+        document
+            .getElementById("badgeStrategist")
+            .classList.add("unlocked");
+
+        badges++;
+
+    }
+
+
+    if(count >= 8){
+
+        document
+            .getElementById("badgePathkeeper")
+            .classList.add("unlocked");
+
+        badges++;
+
+    }
+
+
+    document.getElementById("badgeText").textContent =
+        badges + " / 4";
+
+}
+
+
+/* ==========================================
+   PROGRESSION PATH
+========================================== */
+
+function updatePath(){
+
+    const count =
+        completedQuests.length;
+
+    document.querySelectorAll(".path-stage")
+        .forEach(stage => {
+
+            stage.classList.remove("active");
+
+        });
+
+
+    if(count < 2){
+
+        document
+            .getElementById("stage1")
+            .classList.add("active");
+
+    }
+    else if(count < 4){
+
+        document
+            .getElementById("stage2")
+            .classList.add("active");
+
+    }
+    else if(count < 7){
+
+        document
+            .getElementById("stage3")
+            .classList.add("active");
+
+    }
+    else{
+
+        document
+            .getElementById("stage4")
+            .classList.add("active");
+
+    }
+
+}
+
+
+/* ==========================================
+   INITIALIZE
+========================================== */
+
+updateDashboard();
+
+</script>
+
+</body>
+</html>
