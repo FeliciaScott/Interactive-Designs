@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PathKeeper Strategy & Contingency Planner</title>
+
+<style>
+:root{
+  --forest:#173b2e;
+  --green:#315e48;
+  --sage:#dfe9dc;
+  --cream:#f8f5ed;
+  --brown:#79563e;
+  --gold:#d8b68b;
+  --ink:#26362d;
+  --muted:#6b786f;
+  --line:#dce3da;
+  --white:#fff;
+  --red:#9b4540;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--cream);color:var(--ink);
+  font-family:Arial,Helvetica,sans-serif;line-height:1.6
+}
+button,input,select,textarea{font:inherit}
+header{
+  padding:35px 22px;color:white;
+  background:linear-gradient(135deg,#173b2e,#315e48)
+}
+header .eyebrow{
+  text-transform:uppercase;letter-spacing:2px;
+  font-size:11px;color:#d8b68b;font-weight:bold
+}
+header h1{font-size:clamp(27px,5vw,43px);line-height:1.15;margin:12px 0}
+header p{max-width:800px;color:#e6eee7;margin:0}
+main{max-width:1050px;margin:auto;padding:20px}
+.panel{
+  background:white;border:1px solid var(--line);
+  border-radius:15px;padding:20px;margin-bottom:18px
+}
+h2{font-size:22px;color:var(--forest);margin:0 0 8px}
+h3{font-size:17px;color:var(--forest);margin:0 0 8px}
+.small{font-size:13px;color:var(--muted)}
+.notice{
+  padding:13px;background:#f0f5ed;border-left:4px solid var(--green);
+  border-radius:5px;font-size:13px;margin:15px 0
+}
+.progress-wrap{margin:17px 0}
+.progress-label{display:flex;justify-content:space-between;gap:10px;font-size:12px}
+.progress{
+  height:7px;background:#e6eae3;border-radius:20px;overflow:hidden;margin-top:7px
+}
+.progress div{height:100%;background:var(--green);width:0%;transition:width .2s}
+.section{
+  border-top:1px solid var(--line);padding-top:20px;margin-top:20px
+}
+.question{
+  padding:15px 0;border-bottom:1px solid #edf0eb
+}
+.question:last-child{border-bottom:0}
+.question label.title{
+  display:block;font-weight:bold;font-size:14px;margin-bottom:8px
+}
+.question .hint{font-size:12px;color:var(--muted);margin:0 0 8px}
+input[type=text],input[type=number],input[type=url],input[type=date],
+select,textarea{
+  width:100%;padding:11px 12px;border:1px solid #ccd6ca;
+  border-radius:8px;background:white;color:var(--ink);min-width:0
+}
+textarea{min-height:75px;resize:vertical}
+input:focus,select:focus,textarea:focus{
+  outline:2px solid #9fbea5;outline-offset:1px
+}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}
+button{
+  border:0;border-radius:8px;padding:11px 15px;
+  background:var(--forest);color:white;font-weight:bold;cursor:pointer
+}
+button:hover{filter:brightness(1.1)}
+button.secondary{background:var(--sage);color:var(--forest)}
+button.brown{background:var(--brown)}
+button.danger{background:#f5e3e0;color:var(--red)}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.report{display:none}
+.report.visible{display:block}
+.report-block{
+  padding:15px;background:#fafbf8;border:1px solid var(--line);
+  border-radius:10px;margin:12px 0
+}
+.report-block ul{padding-left:22px}
+.report-block li{margin:7px 0}
+.priority{
+  display:inline-block;padding:3px 8px;border-radius:20px;
+  background:#e2eee0;color:#245333;font-size:11px;font-weight:bold
+}
+.priority.medium{background:#fff0c9;color:#795a12}
+.priority.low{background:#e7e9e7;color:#58635a}
+.report pre{
+  white-space:pre-wrap;overflow-wrap:anywhere;
+  font-family:Arial,sans-serif;font-size:14px;line-height:1.65
+}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
+@media(max-width:650px){
+  main{padding:11px}
+  .panel{padding:15px}
+  .grid{grid-template-columns:1fr}
+  .btn-row button{width:100%}
+}
+@media print{
+  header,.questionnaire,.btn-row,footer{display:none!important}
+  body{background:white}
+  main{max-width:none;padding:0}
+  .panel{border:0}
+  .report{display:block!important}
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="eyebrow">PathKeeper • Strategic Planning System</div>
+  <h1>Build a Strategy. Prepare for Setbacks.</h1>
+  <p>Answer the questions about your website, goals, resources, and constraints. Generate an actionable strategy, a contingency plan, and a downloadable record of your decisions.</p>
+</header>
+
+<main>
+  <section class="panel">
+    <h2>How this tool works</h2>
+    <p class="small">This questionnaire uses the PathKeeper homepage notes as its starting point. Your answers determine the recommendations and priorities in the reports.</p>
+    <div class="notice">
+      Your answers stay in this browser while you work. The tool does not publish changes to Google Sites, inspect private account settings, or verify live links automatically. Reports are generated locally from your answers.
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Questionnaire completion</span>
+        <strong id="progressText">0%</strong>
+      </div>
+      <div class="progress"><div id="progressBar"></div></div>
+      <p class="small" id="answerCount">0 questions answered</p>
+    </div>
+  </section>
+
+  <form id="questionnaire" class="questionnaire">
+    <section class="panel">
+      <h2>01. Purpose and audience</h2>
+      <p class="small">Establish what PathKeeper should accomplish and whom it should serve.</p>
+      <div id="purposeQuestions"></div>
+    </section>
+
+    <section class="panel">
+      <h2>02. Pages and navigation</h2>
+      <p class="small">Determine how visitors should move through the site.</p>
+      <div id="structureQuestions"></div>
+    </section>
+
+    <section class="panel">
+      <h2>03. Content and opportunities</h2>
+      <p class="small">Define the value visitors receive from the site's resources.</p>
+      <div id="contentQuestions"></div>
+    </section>
+
+    <section class="panel">
+      <h2>04. Business model and reach</h2>
+      <p class="small">Decide how the site could attract visitors and potentially generate income.</p>
+      <div id="businessQuestions"></div>
+    </section>
+
+    <section class="panel">
+      <h2>05. Technical quality and operations</h2>
+      <p class="small">Identify the most important improvements and constraints.</p>
+      <div id="technicalQuestions"></div>
+    </section>
+
+    <section class="panel">
+      <h2>06. Risks and contingency planning</h2>
+      <p class="small">Prepare for delays, technical failures, limited resources, and disappointing results.</p>
+      <div id="riskQuestions"></div>
+    </section>
+
+    <section class="panel">
+      <h2>07. Implementation and success measures</h2>
+      <p class="small">Turn the strategy into a sequence of measurable actions.</p>
+      <div id="implementationQuestions"></div>
+      <div class="btn-row">
+        <button type="button" id="generate">Generate my strategy and backup plan</button>
+        <button type="button" class="secondary" id="saveProgress">Download answer backup</button>
+      </div>
+    </section>
+  </form>
+
+  <section class="panel report" id="report" aria-live="polite">
+    <h2>Your personalized PathKeeper strategy</h2>
+    <p class="small" id="reportSummary"></p>
+    <div id="strategyOutput"></div>
+    <div id="backupOutput"></div>
+    <div class="btn-row">
+      <button id="downloadStrategy" type="button">Download strategy (.txt)</button>
+      <button id="downloadBackup" type="button" class="brown">Download contingency plan (.txt)</button>
+      <button id="downloadAll" type="button" class="secondary">Download complete report (.txt)</button>
+      <button id="downloadJson" type="button" class="secondary">Download answers (.json)</button>
+      <button id="printReport" type="button" class="secondary">Print / save as PDF</button>
+    </div>
+    <p class="small">Generate a new report whenever you change your answers. Downloaded files are snapshots of the answers and recommendations at the time of export.</p>
+  </section>
+</main>
+
+<footer>PathKeeper Strategy & Contingency Planner · Local questionnaire and report generator</footer>
+
+<script>
+"use strict";
+
+/* ----------------------------------------------------
+   QUESTION DATA
+---------------------------------------------------- */
+
+const sections = {
+purposeQuestions: [
+ {id:"mission",n:1,label:"What is the primary mission of PathKeeper?",type:"select",required:true,
+ options:["Help people build their own career paths","Help people discover education and funding opportunities","Help people structure time, learning, and goals","Combine career planning, opportunities, learning, and evidence of work","Still deciding"]},
+ {id:"audience",n:2,label:"Who is the main audience?",type:"select",required:true,
+ options:["Students and recent graduates","People changing careers","People with limited resources seeking more opportunities","Entrepreneurs and aspiring business owners","A broad audience with different goals","Still deciding"]},
+ {id:"problem",n:3,label:"What problem should PathKeeper solve first?",type:"select",required:true,
+ options:["People do not know which opportunities exist","People struggle to turn goals into practical plans","People cannot tell which information or resources to trust","People need evidence of skills and completed work","People struggle with attention, consistency, or follow-through","The site has too many disconnected pages","Still deciding"]},
+ {id:"outcome",n:4,label:"What should a visitor be able to accomplish after using the site?",type:"textarea",required:true,
+ placeholder:"Example: identify an opportunity, create a plan, and complete one measurable action."},
+ {id:"position",n:5,label:"What should make PathKeeper different from a general resource directory?",type:"textarea",
+ placeholder:"Describe its strongest distinctive value."},
+ {id:"priorityAudience",n:6,label:"Which audience should receive priority during the first development phase?",type:"select",
+ options:["One clearly defined audience","Two related audiences","All audiences equally","Choose based on evidence after testing"]},
+ {id:"success",n:7,label:"What is the most important result over the next 90 days?",type:"select",required:true,
+ options:["A complete and easy-to-navigate website","Useful resources and functioning internal links","A useful free tool or library that attracts visitors","A validated paid service or product","A repeatable system for maintaining and improving the site","A combination, with a clear priority"]}
+],
+structureQuestions: [
+ {id:"landing",n:8,label:"What is the status of the proposed replacement landing page?",type:"select",required:true,
+ options:["Not started","Draft exists","Built but not published","Published and tested","Unsure"]},
+ {id:"categories",n:9,label:"How should the main categories be organized?",type:"select",required:true,
+ options:["Each category has its own dedicated page","A few main pages with dedicated category pages underneath","One long page with all categories","Still deciding"]},
+ {id:"homepage",n:10,label:"What should happen to the current homepage?",type:"select",required:true,
+ options:["Replace it with the landing page and preserve useful content elsewhere","Keep the homepage and redesign it","Create a new landing page that links to the existing homepage","Still deciding"]},
+ {id:"pictures",n:11,label:"What is the plan for pictures and visual elements?",type:"select",
+ options:["Remove unnecessary pictures and prioritize clear text","Keep only images that help visitors understand something","Retain most pictures but optimize their size and descriptions","Review each image individually"]},
+ {id:"buttons",n:12,label:"Which primary calls to action should the landing page include?",type:"select",required:true,
+ options:["Our Core Mission and Free Library","Our Core Mission, Free Library, and Explore Opportunities","Mission, library, opportunities, and career planning","Need to determine the best button structure"]},
+ {id:"navigation",n:13,label:"How well do the site's current buttons and internal links work?",type:"select",required:true,
+ options:["Many are missing or broken","Some work, but many need testing","Most work and need a final audit","All links have been tested on the published site","Not yet checked"]},
+ {id:"duplicates",n:14,label:"What is the current situation with duplicate or draft pages?",type:"select",
+ options:["Many duplicates and unfinished drafts","Some duplicate pages need to be merged","Pages are mostly organized","I need an inventory before deciding"]},
+ {id:"pageLimits",n:15,label:"Which pages or sections must not be removed or merged without review?",type:"textarea",
+ placeholder:"List important pages, content, or decisions to preserve."}
+],
+contentQuestions: [
+ {id:"offerings",n:16,label:"Which types of offerings should PathKeeper prioritize?",type:"select",required:true,
+ options:["Free educational resources and guides","Opportunity research and curated links","Career planning tools and templates","Courses, workbooks, and digital products","A service that helps people plan and use their time productively","A staged combination of free and paid offerings"]},
+ {id:"atlas",n:17,label:"What should the Opportunity Atlas focus on first?",type:"select",
+ options:["Scholarships, grants, and funding","Certificates, education, and study abroad","Internships, apprenticeships, and work experience","Startup, business, and technology opportunities","Remote work and career mobility","A searchable combination of these categories"]},
+ {id:"quality",n:18,label:"How will the site handle resource accuracy and quality?",type:"select",required:true,
+ options:["Record source links and dates checked","Use a consistent resource review checklist","Review links manually when pages are updated","Create a full source-verification process","No process exists yet"]},
+ {id:"evidence",n:19,label:"How should visitors demonstrate progress?",type:"select",
+ options:["Action plans and progress checklists","Projects, work samples, and portfolios","Certificates and completed learning","A combination of plans, projects, and evidence","This is not a current priority"]},
+ {id:"contentGaps",n:20,label:"Which content gaps are most important to fix?",type:"textarea",
+ placeholder:"Examples: missing descriptions, outdated resources, incomplete pages, unclear instructions."}
+],
+businessQuestions: [
+ {id:"revenue",n:21,label:"What is the preferred business model?",type:"select",required:true,
+ options:["Free resource site first; decide about revenue later","Sell digital products, templates, or workbooks","Offer a clearly defined planning or research service","Use free resources to introduce paid offerings","Combine services and digital products","Still deciding"]},
+ {id:"price",n:22,label:"Do you have a price or price range in mind for a paid offering?",type:"select",
+ options:["No paid offering planned yet","Under $25","$25–$99","$100–$250","More than $250","I need to test willingness to pay"]},
+ {id:"traffic",n:23,label:"What do you know about current site traffic?",type:"select",required:true,
+ options:["I have not measured traffic","Very little traffic","Some visitors, but no clear pattern","Regular visitors","I have analytics and can identify useful traffic sources"]},
+ {id:"marketing",n:24,label:"Which visitor-acquisition methods are realistic?",type:"select",
+ options:["Search-friendly content and internal linking","Relevant communities and direct outreach","Short-form social content","Partnerships and referrals","A combination of free methods","Paid advertising is available","Not sure yet"]},
+ {id:"proof",n:25,label:"What evidence would validate the site's value?",type:"select",
+ options:["Visitors complete a useful task","People return and use resources again","People join a voluntary email list","People request or purchase an offering","Feedback shows that a tool solves a real problem","A combination of these measures"]}
+],
+technicalQuestions: [
+ {id:"platform",n:26,label:"Where will the main site be maintained?",type:"select",
+ options:["Google Sites","Google Sites with embedded HTML tools","A different website platform","Not decided"]},
+ {id:"tech",n:27,label:"What technical support is available?",type:"select",
+ options:["I work alone and need beginner-friendly steps","I can edit HTML, CSS, and basic JavaScript","I can use external technical help when needed","I have a reliable developer or technical collaborator"]},
+ {id:"mobile",n:28,label:"Has the published site been tested on mobile and desktop?",type:"select",required:true,
+ options:["No","Only on desktop","Only on mobile","Both, but some issues remain","Both and the main pages work correctly"]},
+ {id:"search",n:29,label:"What is the current search-engine setup?",type:"select",
+ options:["Public access and indexing settings have not been checked","The site is public, but indexing settings are unknown","Public visibility and indexing preferences have been checked","Search Console is configured and pages have been checked","Unsure"]},
+ {id:"domain",n:30,label:"What is the status of branding and analytics?",type:"select",
+ options:["Neither has been set up","Brand identity is set, analytics are not","Analytics are set, branding needs work","Both are set up and working","A custom domain is not a current priority"]},
+ {id:"time",n:31,label:"How much time can you realistically spend each week?",type:"select",required:true,
+ options:["Under 3 hours","3–5 hours","6–10 hours","11–20 hours","More than 20 hours"]},
+ {id:"budget",n:32,label:"What budget is available for improvements over the next 90 days?",type:"select",required:true,
+ options:["$0; free tools only","Under $50","$50–$200","More than $200","Budget depends on proven results"]},
+ {id:"constraints",n:33,label:"What constraints could slow development?",type:"textarea",
+ placeholder:"Time, technical skills, work schedule, access to content, money, or other limitations."}
+],
+riskQuestions: [
+ {id:"risk",n:34,label:"Which risk concerns you most?",type:"select",required:true,
+ options:["The project becomes too large to finish","Visitors do not arrive","Visitors arrive but do not use the resources","A paid offer does not sell","Pages, buttons, or embedded code break","Information becomes outdated","I lose time or the ability to work on the site","Several of these risks"]},
+ {id:"failure",n:35,label:"What is the minimum useful version of PathKeeper you could publish?",type:"textarea",required:true,
+ placeholder:"Describe the smallest useful version you could complete without building everything."},
+ {id:"fallback",n:36,label:"If your first strategy fails, what can you realistically do instead?",type:"select",required:true,
+ options:["Reduce the site to a smaller core resource library","Focus on one audience and one problem","Test one paid service directly with potential customers","Pause new features and improve existing pages","Return to research and interview potential users","I need help choosing a fallback"]},
+ {id:"preserve",n:37,label:"What must be backed up before major edits?",type:"select",
+ options:["Page inventory and page URLs","Page content, source links, and images","Questionnaire answers and strategy documents","All of the above","I do not have a backup process"]},
+ {id:"stop",n:38,label:"When should you pause or change a strategy?",type:"textarea",
+ placeholder:"Example: if the first small release is delayed twice, reduce scope and publish fewer pages."}
+],
+implementationQuestions: [
+ {id:"first",n:39,label:"What is the first task you want to complete?",type:"textarea",required:true,
+ placeholder:"Choose one specific task you can begin next."},
+ {id:"deadline",n:40,label:"What date are you aiming for to complete your first release?",type:"date"},
+ {id:"measure",n:41,label:"Which result will you measure weekly?",type:"select",required:true,
+ options:["Pages completed and tested","Broken or missing links resolved","Useful resources verified","Visitors and their actions","Customer conversations or offer requests","Sales or paid conversions","Hours spent on the highest-priority tasks"]},
+ {id:"owner",n:42,label:"Who is responsible for implementation?",type:"select",
+ options:["Me alone","Me with occasional outside help","A small team","Not assigned yet"]},
+ {id:"extra",n:43,label:"What else should the strategy account for?",type:"textarea",
+ placeholder:"Add any goals, existing commitments, ideas, or non-negotiable requirements."}
+]};
+
+/* ----------------------------------------------------
+   BUILD QUESTIONNAIRE
+---------------------------------------------------- */
+
+const allQuestions = Object.values(sections).flat();
+
+function renderQuestions(){
+  Object.entries(sections).forEach(([containerId,questions])=>{
+    const container=document.getElementById(containerId);
+    container.innerHTML=questions.map(q=>{
+      let control="";
+      if(q.type==="select"){
+        control=`<select id="${q.id}" name="${q.id}" ${q.required?"required":""}>
+          <option value="">Choose an answer...</option>
+          ${q.options.map(o=>`<option value="${escapeHTML(o)}">${escapeHTML(o)}</option>`).join("")}
+        </select>`;
+      }else if(q.type==="textarea"){
+        control=`<textarea id="${q.id}" name="${q.id}" placeholder="${escapeHTML(q.placeholder||"Enter your answer...")}" ${q.required?"required":""}></textarea>`;
+      }else{
+        control=`<input id="${q.id}" name="${q.id}" type="${q.type}" ${q.required?"required":""} ${q.type==="url"?'placeholder="https://"':""}>`;
+      }
+      return `<div class="question">
+        <label class="title" for="${q.id}">${q.n}. ${escapeHTML(q.label)}${q.required?' <span aria-hidden="true" style="color:#9b4540">*</span>':""}</label>
+        ${q.hint?`<p class="hint">${escapeHTML(q.hint)}</p>`:""}
+        ${control}
+      </div>`;
+    }).join("");
+  });
+}
+
+function escapeHTML(value){
+ return String(value??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+renderQuestions();
+
+/* ----------------------------------------------------
+   ANSWERS AND COMPLETION
+---------------------------------------------------- */
+
+function getAnswers(){
+ const answers={};
+ allQuestions.forEach(q=>{
+  const el=document.getElementById(q.id);
+  answers[q.id]=el?el.value.trim():"";
+ });
+ return answers;
+}
+
+function answeredCount(){
+ const answers=getAnswers();
+ return allQuestions.filter(q=>answers[q.id]!=="").length;
+}
+
+function updateProgress(){
+ const count=answeredCount();
+ const pct=Math.round(count/allQuestions.length*100);
+ document.getElementById("progressBar").style.width=pct+"%";
+ document.getElementById("progressText").textContent=pct+"%";
+ document.getElementById("answerCount").textContent=
+  count+" of "+allQuestions.length+" questions answered";
+}
+
+document.getElementById("questionnaire").addEventListener("input",updateProgress);
+document.getElementById("questionnaire").addEventListener("change",updateProgress);
+
+/* ----------------------------------------------------
+   STRATEGY GENERATION
+---------------------------------------------------- */
+
+function makeStrategy(a){
+ const actions=[];
+ const backup=[];
+ const metrics=[];
+ const phases=[];
+ const add=(priority,title,reason,steps)=>actions.push({priority,title,reason,steps});
+ const addBackup=(risk,trigger,response,recovery)=>backup.push({risk,trigger,response,recovery});
+
+ // Mission and scope
+ if(!a.mission||a.mission==="Still deciding"||a.outcome===""){
+  add("High","Clarify the core mission",
+   "The site needs a specific outcome before additional pages are built.",
+   ["Choose the primary audience and first problem to solve.",
+    "Write a one-sentence mission statement.",
+    "Define one useful result a visitor should achieve."]);
+ }else{
+  add("High","Make the mission visible",
+   "Use the stated mission consistently across the landing page and primary navigation.",
+   ["Write a short mission statement using your selected focus.",
+    "Explain who the site helps and what visitors can do.",
+    "Connect each main call to action to a real destination."]);
+ }
+
+ if(a.priorityAudience==="All audiences equally"||a.audience==="A broad audience with different goals"){
+  add("High","Narrow the first release",
+   "Serving every audience at once can make navigation and content too broad.",
+   ["Select one priority audience for the first release.",
+    "Build around one problem and one useful outcome.",
+    "Expand only after testing the first version."]);
+ }
+
+ // Landing page
+ if(["Not started","Draft exists","Built but not published","Unsure"].includes(a.landing)){
+  add("High","Complete and test the landing page",
+   "The landing page is not yet confirmed as published and tested.",
+   ["Create a clear headline, short mission, and audience description.",
+    "Feature Our Core Mission and Free Library.",
+    "Add Explore Opportunities or Career Planning if they support the main visitor journey.",
+    "Publish and test the page on desktop and mobile."]);
+ }
+
+ if(a.homepage==="Replace it with the landing page and preserve useful content elsewhere"){
+  add("High","Replace the homepage without losing content",
+   "Your stated plan is to make the landing page the entry point.",
+   ["Copy useful existing content into its intended destination before removing anything.",
+    "Create redirects through navigation or buttons where appropriate.",
+    "Test all homepage destinations after publishing."]);
+ }
+
+ if(a.pictures==="Remove unnecessary pictures and prioritize clear text"){
+  add("Medium","Simplify visual design",
+   "The homepage notes call for removing unnecessary pictures.",
+   ["Keep visuals only when they clarify the message.",
+    "Use readable headings, concise descriptions, and clear calls to action.",
+    "Check spacing and readability on mobile."]);
+ }
+
+ // Navigation and duplicates
+ if(a.categories==="Each category has its own dedicated page"||
+    a.categories==="A few main pages with dedicated category pages underneath"){
+  add("High","Build a consistent page hierarchy",
+   "Each category needs a clear home and a predictable way back to the main sections.",
+   ["Assign every page one primary section.",
+    "Use consistent category names.",
+    "Add relevant cross-links without duplicating the entire page.",
+    "Keep drafts and editing notes out of the main visitor navigation."]);
+ }
+
+ if(a.navigation==="Many are missing or broken"||
+    a.navigation==="Some work, but many need testing"||
+    a.navigation==="Not yet checked"){
+  add("High","Run a link audit",
+   "Broken or missing links interrupt the visitor journey.",
+   ["Inventory each visible button and text link.",
+    "Record the intended destination for each one.",
+    "Test the published link, not just the editor preview.",
+    "Mark each link tested only after confirming the destination."]);
+ }
+
+ if(a.duplicates==="Many duplicates and unfinished drafts"||
+    a.duplicates==="Some duplicate pages need to be merged"){
+  add("High","Resolve duplicate pages carefully",
+   "Duplicate drafts create uncertainty about which version is authoritative.",
+   ["Compare content before merging.",
+    "Select one primary version for each topic.",
+    "Move unique content before retiring a duplicate.",
+    "Do not delete a page until its useful content and links are accounted for."]);
+ }
+
+ // Resource content
+ if(a.quality!=="Record source links and dates checked"&&a.quality!=="Create a full source-verification process"){
+  add("High","Introduce resource verification",
+   "Opportunity and education information can become outdated.",
+   ["Record the original source and destination URL.",
+    "Record when each resource was last checked.",
+    "Check eligibility, deadlines, fees, location, and official application instructions where relevant.",
+    "Flag uncertain or expired information instead of presenting it as current."]);
+ }
+
+ if(a.atlas){
+  add("Medium","Prioritize the Opportunity Atlas",
+   "Use the selected opportunity category as the first research and content sprint.",
+   ["Create a consistent page template for each resource.",
+    "Explain who qualifies and what the visitor should do next.",
+    "Link to the original provider.",
+    "Track the last verification date."]);
+ }
+
+ if(a.evidence==="A combination of plans, projects, and evidence"||
+    a.evidence==="Projects, work samples, and portfolios"){
+  add("Medium","Connect planning to evidence",
+   "Visitors should be able to show what they learned or completed.",
+   ["Connect Action Planner to Track Your Progress.",
+    "Connect relevant learning resources to Create Evidence.",
+    "Connect Create Evidence to the portfolio destination.",
+    "Use a repeatable format for project descriptions and proof."]);
+ }
+
+ // Business
+ if(a.revenue==="Sell digital products, templates, or workbooks"||
+    a.revenue==="Offer a clearly defined planning or research service"||
+    a.revenue==="Use free resources to introduce paid offerings"||
+    a.revenue==="Combine services and digital products"||
+    a.offerings==="A service that helps people plan and use their time productively"){
+  add("High","Validate one paid offering before building several",
+   "A small, clearly defined offer is easier to test than a large collection of products.",
+   ["Choose one specific customer problem.",
+    "Define the deliverable, boundaries, turnaround time, and price.",
+    "Create a sample or demonstration.",
+    "Speak to potential customers and record their responses before investing heavily.",
+    "Keep free resources useful and distinguish them from paid deliverables."]);
+ }
+
+ if(a.traffic==="I have not measured traffic"||
+    a.traffic==="Very little traffic"||
+    a.traffic==="Some visitors, but no clear pattern"){
+  add("Medium","Establish a baseline for visitor behavior",
+   "Without a baseline, it is difficult to tell whether changes help.",
+   ["Check available Google Sites traffic and analytics features.",
+    "Record a baseline before major changes.",
+    "Track visitors, useful page visits, button clicks where measurable, and inquiries.",
+    "Review results weekly rather than judging by one day's activity."]);
+ }
+
+ if(a.marketing==="Paid advertising is available"){
+  add("Medium","Validate the offer before scaling promotion",
+   "Advertising can spend money before demand is proven.",
+   ["Test the landing page and offer with low-cost or free methods first.",
+    "Measure whether visitors complete the intended action.",
+    "Set a spending limit and a stop condition before paying for promotion."]);
+ }
+
+ // Technical and operations
+ if(a.mobile!=="Both and the main pages work correctly"){
+  add("High","Test mobile and desktop usability",
+   "The questionnaire does not confirm that the published experience works on both.",
+   ["Preview major pages on desktop and phone.",
+    "Check text size, spacing, scrolling, and button accessibility.",
+    "Test embedded tools in the published version.",
+    "Record and fix the most serious issues first."]);
+ }
+
+ if(a.search==="Public access and indexing settings have not been checked"||
+    a.search==="The site is public, but indexing settings are unknown"||
+    a.search==="Unsure"){
+  add("High","Verify publication and indexing settings",
+   "Search visibility cannot be assumed from a page being published.",
+   ["Confirm the published site's access settings.",
+    "Review the search-engine visibility preference.",
+    "Check the site's presence in Search Console if configured.",
+    "Treat indexing as a process to verify, not a guaranteed outcome."]);
+ }
+
+ if(a.tech==="I work alone and need beginner-friendly steps"||
+    a.time==="Under 3 hours"||a.time==="3–5 hours"){
+  add("High","Limit work in progress",
+   "Limited time or technical support makes an oversized rebuild risky.",
+   ["Work on one main page or one connected task at a time.",
+    "Use reusable page templates.",
+    "Keep a short task list and record the next action before stopping.",
+    "Avoid adding features before the core visitor journey works."]);
+ }
+
+ if(a.budget==="$0; free tools only"||a.budget==="Under $50"){
+  add("High","Use a low-cost implementation strategy",
+   "The first release should not depend on paid tools or services.",
+   ["Prioritize existing Google Sites features and free tools.",
+    "Keep a local copy of page content and resource links.",
+    "Delay optional branding or domain purchases until the site needs them.",
+    "Do not spend on promotion before validating the offer."]);
+ }
+
+ // Risks
+ const riskText=a.risk||"Several of these risks";
+ if(riskText.includes("project becomes too large")||riskText==="Several of these risks"){
+  addBackup("Scope expansion","A planned milestone slips or the page inventory keeps growing.",
+   "Freeze new features and reduce the release to the smallest useful visitor journey.",
+   "Publish the core landing page and a small number of tested destinations; move extras to a later backlog.");
+ }
+ if(riskText.includes("visitors do not arrive")||riskText==="Several of these risks"){
+  addBackup("Low traffic","The site receives little useful traffic after the initial publishing period.",
+   "Review whether the audience, page titles, resources, and distribution methods match real search or visitor needs.",
+   "Choose a few specific topics, improve those pages, and test free outreach before spending on ads.");
+ }
+ if(riskText.includes("do not use the resources")||riskText==="Several of these risks"){
+  addBackup("Low engagement","Visitors arrive but do not click, complete, or return to resources.",
+   "Simplify the page, clarify the next step, and remove distractions.",
+   "Ask a small number of target users to complete one task and record where they get stuck.");
+ }
+ if(riskText.includes("paid offer")||riskText==="Several of these risks"){
+  addBackup("Offer does not sell","People show interest but do not purchase or request the offer.",
+   "Pause expansion of the product and review the problem, audience, proof, deliverables, and price.",
+   "Interview potential buyers and test a smaller offer before investing more time or money.");
+ }
+ if(riskText.includes("code break")||riskText==="Several of these risks"){
+  addBackup("Technical failure","An embedded tool or navigation feature stops working after a change.",
+   "Use the last known working version and restore the affected component.",
+   "Keep dated copies of code, test the published page after edits, and temporarily provide a simple text-based alternative.");
+ }
+ if(riskText.includes("outdated")||riskText==="Several of these risks"){
+  addBackup("Outdated information","A link, eligibility requirement, deadline, or resource changes.",
+   "Mark the item for review and avoid presenting unverified details as current.",
+   "Use official sources, record verification dates, and replace expired resources.");
+ }
+ if(riskText.includes("lose time")||riskText==="Several of these risks"){
+  addBackup("Loss of available time","Work, personal responsibilities, or other constraints interrupt development.",
+   "Switch to maintenance mode rather than abandoning the whole project.",
+   "Keep one next action, a current backup, and a list of the three most important unfinished tasks.");
+ }
+
+ if(!backup.length){
+  addBackup("General project disruption","A major task fails, a deadline is missed, or circumstances change.",
+   "Pause new features, preserve current work, and identify the immediate cause.",
+   "Resume with the smallest useful task and reassess the plan before making additional commitments.");
+ }
+
+ if(a.fallback){
+  addBackup("Primary strategy becomes impractical",
+   "The selected approach no longer fits available time, resources, or user response.",
+   "Use this fallback: "+a.fallback+".",
+   "Preserve useful existing pages and records, then set a new short review period.");
+ }
+
+ // Implementation phases
+ phases.push({
+  title:"Phase 1 — Protect and clarify",
+  time:"First working session",
+  tasks:[
+   "Export this questionnaire and preserve the current page inventory.",
+   "Confirm the mission, priority audience, and one measurable visitor outcome.",
+   "Identify which pages and content must be preserved."
+  ]
+ });
+ phases.push({
+  title:"Phase 2 — Build the minimum useful experience",
+  time:"Next work sessions",
+  tasks:[
+   "Complete the landing page and primary calls to action.",
+   "Organize the core categories and assign each page one primary home.",
+   "Fix and test the links needed for the main visitor journey."
+  ]
+ });
+ phases.push({
+  title:"Phase 3 — Verify and learn",
+  time:"After the first version is published",
+  tasks:[
+   "Test the published site on desktop and mobile.",
+   "Verify resource sources and search visibility settings.",
+   "Collect feedback and record a baseline for visitor actions."
+  ]
+ });
+ phases.push({
+  title:"Phase 4 — Improve based on evidence",
+  time:"Weekly review",
+  tasks:[
+   "Fix the highest-impact problems before adding new features.",
+   "Test one content, navigation, or offer improvement at a time.",
+   "Continue, revise, or pause based on actual results."
+  ]
+ });
+
+ metrics.push(a.measure||"Pages completed and tested");
+ metrics.push("Number of broken or missing links resolved");
+ metrics.push("Number of resources verified");
+ if(a.revenue!=="Free resource site first; decide about revenue later"){
+  metrics.push("Number of genuine offer inquiries or purchase decisions");
+ }
+ metrics.push("Time spent on the highest-priority task");
+
+ const priorityOrder={High:0,Medium:1,Low:2};
+ actions.sort((x,y)=>priorityOrder[x.priority]-priorityOrder[y.priority]);
+
+ return {actions,backup,phases,metrics,riskText};
+}
+
+/* ----------------------------------------------------
+   REPORT FORMATTING
+---------------------------------------------------- */
+
+function answerLabel(id){
+ const q=allQuestions.find(q=>q.id===id);
+ return q?q.label:id;
+}
+function nonEmptyAnswers(a){
+ return allQuestions.filter(q=>a[q.id]).map(q=>({question:q.label,answer:a[q.id]}));
+}
+
+function buildStrategyText(a,s){
+ const lines=[];
+ lines.push("PATHKEEPER — STRATEGY");
+ lines.push("Generated: "+new Date().toLocaleString());
+ lines.push("");
+ lines.push("MISSION AND DIRECTION");
+ lines.push("Mission: "+(a.mission||"Not decided"));
+ lines.push("Audience: "+(a.audience||"Not decided"));
+ lines.push("First problem: "+(a.problem||"Not decided"));
+ lines.push("Desired visitor outcome: "+(a.outcome||"Not provided"));
+ lines.push("90-day target: "+(a.success||"Not decided"));
+ lines.push("");
+ lines.push("RECOMMENDED ACTIONS");
+ s.actions.forEach((item,i)=>{
+  lines.push("");
+  lines.push((i+1)+". ["+item.priority+"] "+item.title);
+  lines.push(item.reason);
+  item.steps.forEach(step=>lines.push(" - "+step));
+ });
+ lines.push("");
+ lines.push("IMPLEMENTATION PHASES");
+ s.phases.forEach(p=>{
+  lines.push("");
+  lines.push(p.title+" — "+p.time);
+  p.tasks.forEach(t=>lines.push(" - "+t));
+ });
+ lines.push("");
+ lines.push("WEEKLY MEASURES");
+ s.metrics.forEach(m=>lines.push(" - "+m));
+ lines.push("");
+ lines.push("CONSTRAINTS");
+ lines.push("Time available: "+(a.time||"Not provided"));
+ lines.push("Budget: "+(a.budget||"Not provided"));
+ lines.push("Technical support: "+(a.tech||"Not provided"));
+ lines.push("Constraints: "+(a.constraints||"Not provided"));
+ lines.push("");
+ lines.push("USER-PROVIDED NEXT TASK");
+ lines.push(a.first||"Not provided");
+ lines.push("Target date: "+(a.deadline||"Not provided"));
+ lines.push("");
+ lines.push("ADDITIONAL NOTES");
+ lines.push(a.extra||"Not provided");
+ lines.push("");
+ lines.push("Planning note: These recommendations are generated from questionnaire answers. They are not verified traffic, sales, technical, or market results.");
+ return lines.join("\n");
+}
+
+function buildBackupText(a,s){
+ const lines=[];
+ lines.push("PATHKEEPER — CONTINGENCY AND BACKUP PLAN");
+ lines.push("Generated: "+new Date().toLocaleString());
+ lines.push("");
+ lines.push("PRIMARY RISK");
+ lines.push(a.risk||"General project disruption");
+ lines.push("");
+ lines.push("MINIMUM USEFUL RELEASE");
+ lines.push(a.failure||"Not defined");
+ lines.push("");
+ lines.push("PREFERRED FALLBACK");
+ lines.push(a.fallback||"Not defined");
+ lines.push("");
+ lines.push("CONTINGENCY ACTIONS");
+ s.backup.forEach((b,i)=>{
+  lines.push("");
+  lines.push((i+1)+". "+b.risk);
+  lines.push("Trigger: "+b.trigger);
+  lines.push("Immediate response: "+b.response);
+  lines.push("Recovery plan: "+b.recovery);
+ });
+ lines.push("");
+ lines.push("BACKUP AND RECOVERY CHECKLIST");
+ [
+  "Keep a dated copy of the page inventory and important URLs.",
+  "Save working HTML, CSS, and JavaScript before making substantial edits.",
+  "Preserve unique page content before merging or removing pages.",
+  "Export questionnaire answers and reports after major decisions.",
+  "Test key buttons and pages after publishing changes.",
+  "Keep a list of known issues and the last known working version.",
+  "If a deadline slips, reduce scope rather than silently expanding the plan."
+ ].forEach(x=>lines.push("[ ] "+x));
+ lines.push("");
+ lines.push("CHANGE-OF-PLAN RULE");
+ lines.push(a.stop||"Review progress weekly. If a milestone slips repeatedly, reduce scope, identify the blocker, and choose a smaller next action.");
+ lines.push("");
+ lines.push("PRESERVATION REQUIREMENTS");
+ lines.push(a.preserve||"Back up the page inventory, content, links, and questionnaire answers.");
+ lines.push("");
+ lines.push("REVIEW SCHEDULE");
+ lines.push("Review the plan weekly and after any major technical failure, audience change, or change in available time or budget.");
+ lines.push("");
+ lines.push("This is a planning aid. It cannot automatically back up or restore the published Google Site.");
+ return lines.join("\n");
+}
+
+function renderReport(a,s){
+ const report=document.getElementById("report");
+ report.classList.add("visible");
+ document.getElementById("reportSummary").textContent=
+  "Based on "+answeredCount()+" answered questions. Your primary focus is "+
+  (a.success||"clarifying and improving PathKeeper")+". Recommendations are ranked by priority.";
+ const strategy=document.getElementById("strategyOutput");
+ strategy.innerHTML=`
+  <div class="report-block">
+   <h3>Mission and intended outcome</h3>
+   <p><strong>Mission:</strong> ${escapeHTML(a.mission||"Not decided")}</p>
+   <p><strong>Audience:</strong> ${escapeHTML(a.audience||"Not decided")}</p>
+   <p><strong>First problem:</strong> ${escapeHTML(a.problem||"Not decided")}</p>
+   <p><strong>Desired result:</strong> ${escapeHTML(a.outcome||"Not provided")}</p>
+   <p><strong>90-day target:</strong> ${escapeHTML(a.success||"Not decided")}</p>
+  </div>
+  <div class="report-block">
+   <h3>Prioritized strategy</h3>
+   ${s.actions.map((item,i)=>`
+    <div style="border-bottom:1px solid #dce3da;padding:12px 0">
+     <span class="priority ${item.priority==="Medium"?"medium":item.priority==="Low"?"low":""}">${item.priority} priority</span>
+     <h3 style="margin-top:8px">${i+1}. ${escapeHTML(item.title)}</h3>
+     <p>${escapeHTML(item.reason)}</p>
+     <ul>${item.steps.map(step=>`<li>${escapeHTML(step)}</li>`).join("")}</ul>
+    </div>`).join("")}
+  </div>
+  <div class="report-block">
+   <h3>Implementation roadmap</h3>
+   ${s.phases.map(p=>`
+    <div style="margin:12px 0">
+     <strong>${escapeHTML(p.title)}</strong>
+     <p class="small">${escapeHTML(p.time)}</p>
+     <ul>${p.tasks.map(t=>`<li>${escapeHTML(t)}</li>`).join("")}</ul>
+    </div>`).join("")}
+  </div>
+  <div class="report-block">
+   <h3>Weekly scorecard</h3>
+   <ul>${s.metrics.map(m=>`<li>${escapeHTML(m)}</li>`).join("")}</ul>
+  </div>`;
+ const backup=document.getElementById("backupOutput");
+ backup.innerHTML=`
+  <div class="report-block">
+   <h2>Contingency and backup plan</h2>
+   <p><strong>Primary risk:</strong> ${escapeHTML(a.risk||"General project disruption")}</p>
+   <p><strong>Minimum useful release:</strong> ${escapeHTML(a.failure||"Not defined")}</p>
+   <p><strong>Fallback:</strong> ${escapeHTML(a.fallback||"Not defined")}</p>
+   ${s.backup.map((b,i)=>`
+    <div style="margin:15px 0;border-top:1px solid #dce3da;padding-top:12px">
+     <h3>${i+1}. ${escapeHTML(b.risk)}</h3>
+     <p><strong>Trigger:</strong> ${escapeHTML(b.trigger)}</p>
+     <p><strong>Immediate response:</strong> ${escapeHTML(b.response)}</p>
+     <p><strong>Recovery:</strong> ${escapeHTML(b.recovery)}</p>
+    </div>`).join("")}
+   <h3>Recovery checklist</h3>
+   <ul>
+    <li>Save a dated backup of the page inventory and URLs.</li>
+    <li>Keep working code and source content before major changes.</li>
+    <li>Test key links and pages after publishing.</li>
+    <li>Reduce scope if deadlines repeatedly slip.</li>
+    <li>Review this plan weekly and after major changes.</li>
+   </ul>
+  </div>`;
+ report.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ----------------------------------------------------
+   DOWNLOADS
+---------------------------------------------------- */
+
+function downloadFile(filename,content,type){
+ const blob=new Blob([content],{type});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;a.download=filename;
+ document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+let latestAnswers=null;
+let latestStrategy=null;
+let latestBackup=null;
+let latestResults=null;
+
+function makeJsonBackup(a,s,b){
+ return {
+  application:"PathKeeper Strategy & Contingency Planner",
+  schemaVersion:1,
+  exportedAt:new Date().toISOString(),
+  answers:a,
+  answeredQuestions:nonEmptyAnswers(a),
+  strategy:s,
+  contingencyPlan:b
+ };
+}
+
+function generate(){
+ const form=document.getElementById("questionnaire");
+ if(!form.reportValidity())return;
+ const a=getAnswers();
+ const s=makeStrategy(a);
+ const strategyText=buildStrategyText(a,s);
+ const backupText=buildBackupText(a,s);
+ latestAnswers=a;
+ latestStrategy=strategyText;
+ latestBackup=backupText;
+ latestResults=makeJsonBackup(a,s,backupText);
+ renderReport(a,s);
+}
+
+document.getElementById("generate").addEventListener("click",generate);
+
+document.getElementById("saveProgress").addEventListener("click",()=>{
+ const a=getAnswers();
+ const payload={
+  application:"PathKeeper Strategy & Contingency Planner",
+  schemaVersion:1,
+  exportedAt:new Date().toISOString(),
+  answers:a
+ };
+ downloadFile("pathkeeper-questionnaire-backup.json",
+  JSON.stringify(payload,null,2),"application/json");
+});
+
+document.getElementById("downloadStrategy").addEventListener("click",()=>{
+ if(!latestStrategy){generate();if(!latestStrategy)return;}
+ downloadFile("pathkeeper-strategy.txt",latestStrategy,"text/plain;charset=utf-8");
+});
+document.getElementById("downloadBackup").addEventListener("click",()=>{
+ if(!latestBackup){generate();if(!latestBackup)return;}
+ downloadFile("pathkeeper-contingency-plan.txt",latestBackup,"text/plain;charset=utf-8");
+});
+document.getElementById("downloadAll").addEventListener("click",()=>{
+ if(!latestStrategy){generate();if(!latestStrategy)return;}
+ downloadFile("pathkeeper-complete-plan.txt",
+  latestStrategy+"\n\n"+latestBackup,"text/plain;charset=utf-8");
+});
+document.getElementById("downloadJson").addEventListener("click",()=>{
+ if(!latestResults){generate();if(!latestResults)return;}
+ downloadFile("pathkeeper-strategy-backup.json",
+  JSON.stringify(latestResults,null,2),"application/json");
+});
+document.getElementById("printReport").addEventListener("click",()=>{
+ if(!latestStrategy){generate();if(!latestStrategy)return;}
+ window.print();
+});
+
+/* ----------------------------------------------------
+   LOCAL DRAFT RECOVERY
+---------------------------------------------------- */
+
+const DRAFT_KEY="pathkeeper-strategy-questionnaire-v1";
+
+function restoreDraft(){
+ try{
+  const saved=localStorage.getItem(DRAFT_KEY);
+  if(!saved)return;
+  const parsed=JSON.parse(saved);
+  if(!parsed||typeof parsed!=="object")return;
+  allQuestions.forEach(q=>{
+   const el=document.getElementById(q.id);
+   if(el&&typeof parsed[q.id]==="string")el.value=parsed[q.id];
+  });
+ }catch(error){
+  console.warn("A saved draft could not be restored.",error);
+ }
+}
+
+let saveTimer;
+document.getElementById("questionnaire").addEventListener("input",()=>{
+ clearTimeout(saveTimer);
+ saveTimer=setTimeout(()=>{
+  try{localStorage.setItem(DRAFT_KEY,JSON.stringify(getAnswers()));}
+  catch(error){
+   document.getElementById("answerCount").textContent=
+    "Browser storage is unavailable. Download a backup to preserve answers.";
+  }
+ },250);
+});
+
+restoreDraft();
+updateProgress();
+</script>
+</body>
+</html>
