@@ -1,0 +1,2112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PathKeeper | Opportunity Intelligence Center</title>
+
+<style>
+:root {
+  --blue-dark: #233F5A;
+  --blue: #527A9B;
+  --blue-light: #DCE8F0;
+  --blue-pale: #EDF3F7;
+
+  --brown-dark: #3F3029;
+  --brown: #654735;
+  --brown-light: #8A6B52;
+  --tan: #C5A16B;
+
+  --cream: #F6F0E4;
+  --cream-dark: #EAE0D0;
+  --paper: #FFFCF5;
+
+  --ink: #303944;
+  --muted: #6C747C;
+  --line: #DED8CD;
+  --white: #FFFFFF;
+
+  --shadow: 0 12px 35px rgba(35, 63, 90, 0.09);
+  --radius: 17px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.65;
+}
+
+a {
+  color: var(--blue-dark);
+}
+
+button,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.container {
+  width: min(1160px, 92%);
+  margin: auto;
+}
+
+.section {
+  padding: 76px 0;
+}
+
+.section-light {
+  background: var(--paper);
+}
+
+.section-blue {
+  background: var(--blue-pale);
+}
+
+.section-brown {
+  background: var(--brown-dark);
+  color: var(--cream);
+}
+
+.eyebrow {
+  display: inline-block;
+  color: var(--brown);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.section-heading {
+  max-width: 760px;
+  margin-bottom: 35px;
+}
+
+.section-heading h2 {
+  color: var(--blue-dark);
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.2;
+  margin-bottom: 13px;
+}
+
+.section-heading p {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.section-brown .section-heading h2,
+.section-brown .section-heading p {
+  color: var(--cream);
+}
+
+.section-brown .eyebrow {
+  color: var(--tan);
+}
+
+/* NAVIGATION */
+
+.topbar {
+  background: var(--blue-dark);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(0,0,0,.12);
+}
+
+.nav {
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.brand {
+  color: var(--cream);
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.brand span {
+  color: var(--tan);
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 19px;
+  align-items: center;
+}
+
+.nav-links a {
+  color: #F4F0E8;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  transition: color .2s;
+}
+
+.nav-links a:hover {
+  color: var(--tan);
+}
+
+/* HERO */
+
+.hero {
+  background:
+    radial-gradient(circle at 85% 15%, rgba(197,161,107,.18), transparent 30%),
+    linear-gradient(120deg, #233F5A 0%, #365C78 58%, #654735 130%);
+  color: white;
+  padding: 100px 0 85px;
+  overflow: hidden;
+}
+
+.hero-content {
+  max-width: 850px;
+}
+
+.hero-label {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 30px;
+  color: #F0D6AE;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  margin-bottom: 22px;
+}
+
+.hero h1 {
+  font-size: clamp(36px, 6vw, 62px);
+  line-height: 1.08;
+  max-width: 850px;
+  margin-bottom: 24px;
+}
+
+.hero h1 span {
+  color: #E8C89A;
+}
+
+.hero p {
+  max-width: 700px;
+  color: #E5EAF0;
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 21px;
+  border-radius: 9px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 800;
+  border: 1px solid transparent;
+  transition: transform .2s, background .2s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-cream {
+  background: var(--cream);
+  color: var(--blue-dark);
+}
+
+.btn-outline {
+  border-color: rgba(255,255,255,.6);
+  color: white;
+  background: transparent;
+}
+
+.btn-blue {
+  background: var(--blue-dark);
+  color: white;
+}
+
+.btn-brown {
+  background: var(--brown);
+  color: white;
+}
+
+/* INTRODUCTION */
+
+.intro-grid {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 30px;
+  align-items: stretch;
+}
+
+.intro-copy {
+  padding: 30px 0;
+}
+
+.intro-copy h2 {
+  color: var(--blue-dark);
+  font-size: 33px;
+  line-height: 1.2;
+  margin-bottom: 18px;
+}
+
+.intro-copy p {
+  color: var(--muted);
+  margin-bottom: 15px;
+}
+
+.principle-card {
+  background: var(--blue-dark);
+  color: white;
+  border-radius: var(--radius);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: var(--shadow);
+}
+
+.principle-card .small-label {
+  color: var(--tan);
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.principle-card h3 {
+  font-size: 25px;
+  line-height: 1.3;
+  margin-bottom: 15px;
+}
+
+.principle-card p {
+  color: #E3EAF0;
+  font-size: 14px;
+}
+
+/* PATHWAY CARDS */
+
+.pathway-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.pathway-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+}
+
+.pathway-card:nth-child(2),
+.pathway-card:nth-child(4) {
+  border-top: 5px solid var(--brown);
+}
+
+.pathway-card:nth-child(1),
+.pathway-card:nth-child(3) {
+  border-top: 5px solid var(--blue);
+}
+
+.pathway-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--blue-pale);
+  display: grid;
+  place-items: center;
+  font-size: 23px;
+  margin-bottom: 18px;
+}
+
+.pathway-card h3 {
+  color: var(--blue-dark);
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.pathway-card p {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.pathway-card ul {
+  padding-left: 19px;
+  margin-bottom: 20px;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.pathway-card li {
+  margin-bottom: 7px;
+}
+
+.pathway-card .btn {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+/* COMPARISON TABLE */
+
+.table-wrap {
+  overflow-x: auto;
+  border-radius: 13px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+th {
+  background: var(--blue-dark);
+  color: white;
+  text-align: left;
+  padding: 17px;
+  font-size: 13px;
+}
+
+td {
+  padding: 16px 17px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 13px;
+  vertical-align: top;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:nth-child(even) {
+  background: #F7F3EB;
+}
+
+td strong {
+  color: var(--brown);
+}
+
+/* OPPORTUNITY PROCESS */
+
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 13px;
+}
+
+.process-step {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.17);
+  padding: 22px 16px;
+  border-radius: 13px;
+  text-align: center;
+}
+
+.process-number {
+  width: 38px;
+  height: 38px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  background: var(--tan);
+  color: var(--brown-dark);
+  font-weight: 900;
+  border-radius: 50%;
+}
+
+.process-step h3 {
+  font-size: 17px;
+  color: #F2D5AA;
+  margin-bottom: 8px;
+}
+
+.process-step p {
+  color: #E2E4E7;
+  font-size: 12px;
+}
+
+/* DETAIL SECTIONS */
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.detail-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 27px;
+}
+
+.detail-card h3 {
+  color: var(--blue-dark);
+  font-size: 21px;
+  margin-bottom: 13px;
+}
+
+.detail-card p {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.detail-card ul {
+  padding-left: 19px;
+  font-size: 14px;
+}
+
+.detail-card li {
+  margin-bottom: 8px;
+}
+
+.evidence-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 17px;
+}
+
+.evidence-item {
+  background: var(--blue-pale);
+  border-left: 4px solid var(--brown-light);
+  padding: 13px 15px;
+  border-radius: 7px;
+  font-size: 13px;
+}
+
+.evidence-item strong {
+  display: block;
+  color: var(--blue-dark);
+  margin-bottom: 3px;
+}
+
+/* RESOURCE MATRIX */
+
+.matrix-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 24px;
+  background: var(--blue-pale);
+  padding: 20px;
+  border-radius: 13px;
+}
+
+.control-group label {
+  display: block;
+  color: var(--blue-dark);
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 7px;
+}
+
+.control-group select {
+  width: 100%;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--ink);
+  outline-color: var(--blue);
+}
+
+.resource-name {
+  color: var(--blue-dark);
+  font-weight: 800;
+}
+
+.resource-link {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  color: var(--brown);
+}
+
+.resource-link:hover {
+  text-decoration: underline;
+}
+
+#matrixCount {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 12px 0;
+}
+
+.no-results {
+  display: none;
+  background: var(--cream);
+  padding: 22px;
+  border-radius: 10px;
+  color: var(--brown);
+  text-align: center;
+}
+
+/* RESOURCE VAULT */
+
+.vault-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.vault-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow);
+}
+
+.vault-card .vault-icon {
+  font-size: 28px;
+  margin-bottom: 13px;
+}
+
+.vault-card h3 {
+  color: var(--blue-dark);
+  font-size: 19px;
+  margin-bottom: 10px;
+}
+
+.vault-card p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 17px;
+}
+
+.vault-card a {
+  margin-top: auto;
+  color: var(--brown);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.vault-card a:hover {
+  text-decoration: underline;
+}
+
+/* CHECKLIST */
+
+.checklist-layout {
+  display: grid;
+  grid-template-columns: 1fr .8fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.checklist-panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px;
+}
+
+.checklist-panel h3 {
+  color: var(--blue-dark);
+  font-size: 22px;
+  margin-bottom: 18px;
+}
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.check-item:last-child {
+  border-bottom: none;
+}
+
+.check-item input {
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  accent-color: var(--blue-dark);
+  flex-shrink: 0;
+}
+
+.progress-panel {
+  background: var(--blue-dark);
+  color: white;
+  border-radius: var(--radius);
+  padding: 30px;
+}
+
+.progress-panel h3 {
+  color: #E8C89A;
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.progress-panel p {
+  color: #E3EAF0;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.progress-number {
+  font-size: 42px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.progress-track {
+  height: 12px;
+  border-radius: 30px;
+  background: rgba(255,255,255,.2);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--tan);
+  border-radius: 30px;
+  transition: width .3s ease;
+}
+
+.progress-status {
+  color: #F0D6AE;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.reset-button {
+  border: 1px solid rgba(255,255,255,.55);
+  background: transparent;
+  color: white;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* RESOURCE INDEX */
+
+.index-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.index-group {
+  background: var(--paper);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+}
+
+.index-group h3 {
+  color: var(--blue-dark);
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.index-group a {
+  display: block;
+  color: var(--brown);
+  font-size: 12px;
+  text-decoration: none;
+  margin-bottom: 9px;
+  font-weight: 700;
+}
+
+.index-group a:hover {
+  text-decoration: underline;
+}
+
+/* FOOTER */
+
+.footer {
+  background: var(--brown-dark);
+  color: var(--cream);
+  padding: 35px 0;
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.footer strong {
+  color: var(--tan);
+  font-size: 20px;
+}
+
+.footer p {
+  color: #D9D0C7;
+  font-size: 12px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 850px) {
+  .nav {
+    padding: 15px 0;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .nav-links {
+    gap: 12px;
+  }
+
+  .intro-grid,
+  .detail-grid,
+  .checklist-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .process-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .vault-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .index-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media(max-width: 580px) {
+  .section {
+    padding: 52px 0;
+  }
+
+  .hero {
+    padding: 70px 0;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .nav-links {
+    gap: 9px 14px;
+  }
+
+  .nav-links a {
+    font-size: 11px;
+  }
+
+  .pathway-grid,
+  .vault-grid,
+  .matrix-controls,
+  .index-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .process-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pathway-card,
+  .detail-card {
+    padding: 22px;
+  }
+
+  .footer-content {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+<header class="topbar">
+  <div class="container nav">
+    <a class="brand" href="#home">PATH<span>KEEPER</span></a>
+
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#overview">Overview</a>
+      <a href="#pathways">Pathways</a>
+      <a href="#education">Education</a>
+      <a href="#career">Career</a>
+      <a href="#business">Business</a>
+      <a href="#matrix">Resource Matrix</a>
+      <a href="#vault">Resource Vault</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-label">PATHKEEPER OPPORTUNITY INTELLIGENCE</div>
+
+      <h1>
+        Build a Career Path That
+        <span>You Control.</span>
+      </h1>
+
+      <p>
+        Explore education, independent learning, career advancement,
+        and entrepreneurship. Compare opportunities, identify resources,
+        build practical skills, and turn what you learn into evidence
+        that moves you forward.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn-cream" href="#pathways">Explore Your Pathways</a>
+        <a class="btn btn-outline" href="#matrix">Find Learning Resources</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OVERVIEW -->
+<section class="section section-light" id="overview">
+  <div class="container">
+    <div class="intro-grid">
+
+      <div class="intro-copy">
+        <span class="eyebrow">The Opportunity Intelligence Center</span>
+
+        <h2>Opportunity is more than finding an opening. It is building the ability to use it.</h2>
+
+        <p>
+          A career path does not have to follow one traditional route.
+          People can combine formal education, independent study,
+          certifications, practical projects, work experience, funding,
+          and business development.
+        </p>
+
+        <p>
+          The goal is to identify what a particular opportunity requires,
+          determine what resources are available, and build a realistic
+          sequence of actions that moves you toward the outcome.
+        </p>
+
+        <p>
+          PathKeeper organizes those decisions so that learning has a
+          purpose, practice produces evidence, and evidence can support
+          the next opportunity.
+        </p>
+      </div>
+
+      <div class="principle-card">
+        <div class="small-label">The PathKeeper Principle</div>
+
+        <h3>Do not collect information without deciding what it will help you accomplish.</h3>
+
+        <p>
+          Connect every course, credential, project, and experience
+          to a specific capability, requirement, or future opportunity.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOUR PATHWAYS -->
+<section class="section" id="pathways">
+  <div class="container">
+
+    <div class="section-heading">
+      <span class="eyebrow">Choose a direction</span>
+      <h2>Four Ways to Build an Opportunity</h2>
+      <p>
+        These pathways can be pursued independently or combined.
+        The right approach depends on your resources, timeline,
+        financial situation, and intended outcome.
+      </p>
+    </div>
+
+    <div class="pathway-grid">
+
+      <article class="pathway-card">
+        <div class="pathway-icon">🎓</div>
+        <h3>Traditional Education</h3>
+
+        <p>
+          Use colleges, universities, professional programs,
+          and recognized institutions to develop structured knowledge
+          and earn formal credentials.
+        </p>
+
+        <ul>
+          <li>Degrees and academic programs</li>
+          <li>Scholarships and financial aid</li>
+          <li>Professional certificates</li>
+          <li>Internships and institutional networks</li>
+          <li>Transferable academic credits</li>
+        </ul>
+
+        <a class="btn btn-blue" href="#education">Explore Education</a>
+      </article>
+
+      <article class="pathway-card">
+        <div class="pathway-icon">📚</div>
+        <h3>Self-Education</h3>
+
+        <p>
+          Create a structured learning program using free and
+          affordable courses, books, research, practice,
+          and independent projects.
+        </p>
+
+        <ul>
+          <li>Online courses and tutorials</li>
+          <li>Open educational resources</li>
+          <li>Industry certifications</li>
+          <li>Portfolio projects</li>
+          <li>Independent research and practice</li>
+        </ul>
+
+        <a class="btn btn-brown" href="#self-education">Explore Self-Education</a>
+      </article>
+
+      <article class="pathway-card">
+        <div class="pathway-icon">💼</div>
+        <h3>Career Advancement</h3>
+
+        <p>
+          Develop capabilities that employers value, demonstrate
+          measurable contributions, and prepare for better roles
+          and increased responsibility.
+        </p>
+
+        <ul>
+          <li>Skills gap analysis</li>
+          <li>Workplace performance evidence</li>
+          <li>Professional development</li>
+          <li>Career transitions</li>
+          <li>Promotion and specialization</li>
+        </ul>
+
+        <a class="btn btn-blue" href="#career">Explore Career Growth</a>
+      </article>
+
+      <article class="pathway-card">
+        <div class="pathway-icon">🚀</div>
+        <h3>Entrepreneurship</h3>
+
+        <p>
+          Build an independent source of opportunity by identifying
+          problems, testing solutions, developing offers,
+          and learning how to reach customers.
+        </p>
+
+        <ul>
+          <li>Business research and validation</li>
+          <li>Grants and funding research</li>
+          <li>Business planning</li>
+          <li>Digital products and services</li>
+          <li>Customer acquisition</li>
+        </ul>
+
+        <a class="btn btn-brown" href="#business">Explore Entrepreneurship</a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="section section-light" id="comparison">
+  <div class="container">
+
+    <div class="section-heading">
+      <span class="eyebrow">Evaluate before committing</span>
+      <h2>Compare Your Opportunity Options</h2>
+      <p>
+        Each route has different costs, requirements, timelines,
+        and forms of evidence. Compare the actual opportunity
+        rather than assuming one route is always better.
+      </p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Pathway</th>
+            <th>Primary Investment</th>
+            <th>Possible Evidence</th>
+            <th>Potential Advantages</th>
+            <th>Considerations</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td><strong>Traditional Education</strong></td>
+            <td>Tuition, time, application costs</td>
+            <td>Degree, transcript, academic projects</td>
+            <td>Structured instruction and recognized credentials</td>
+            <td>Cost, admission requirements, program length</td>
+          </tr>
+
+          <tr>
+            <td><strong>Self-Education</strong></td>
+            <td>Study time, materials, possible exam fees</td>
+            <td>Projects, portfolio, certificates, demonstrations</td>
+            <td>Flexibility and control over learning sequence</td>
+            <td>Requires structure, consistency, and proof of ability</td>
+          </tr>
+
+          <tr>
+            <td><strong>Career Advancement</strong></td>
+            <td>Skill development and professional experience</td>
+            <td>Work results, references, specialized skills</td>
+            <td>Builds on existing experience</td>
+            <td>Opportunities depend on employer and industry</td>
+          </tr>
+
+          <tr>
+            <td><strong>Entrepreneurship</strong></td>
+            <td>Research, testing, time, operating expenses</td>
+            <td>Customer results, products, sales, case studies</td>
+            <td>Potential to create an independent income source</td>
+            <td>Market uncertainty and financial risk</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<!-- OPPORTUNITY PROCESS -->
+<section class="section section-brown" id="process">
+  <div class="container">
+
+    <div class="section-heading">
+      <span class="eyebrow">The opportunity-building system</span>
+      <h2>Turn Learning Into Something You Can Use</h2>
+      <p>
+        Learning becomes more useful when it produces a visible
+        result and connects to a real-world opportunity.
+      </p>
+    </div>
+
+    <div class="process-grid">
+
+      <div class="process-step">
+        <div class="process-number">1</div>
+        <h3>Learn</h3>
+        <p>Acquire the knowledge and understand the requirements.</p>
+      </div>
+
+      <div class="process-step">
+        <div class="process-number">2</div>
+        <h3>Build</h3>
+        <p>Practice through projects, exercises, and real tasks.</p>
+      </div>
+
+      <div class="process-step">
+        <div class="process-number">3</div>
+        <h3>Prove</h3>
+        <p>Document results, demonstrate ability, and collect evidence.</p>
+      </div>
+
+      <div class="process-step">
+        <div class="process-number">4</div>
+        <h3>Connect</h3>
+        <p>Find employers, customers, institutions, and relevant networks.</p>
+      </div>
+
+      <div class="process-step">
+        <div class="process-number">5</div>
+        <h3>Convert</h3>
+        <p>Use your preparation to pursue a job, credential, contract, or venture.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section class="section section-light" id="education">
+  <div class="container">
+
+    <div class="section-heading">
+      <span class="eyebrow">Pathway 01</span>
+      <h2>Traditional Education and Financial Access</h2>
+      <p>
+        Formal education can provide structured learning,
+        recognized qualifications, and access to institutional
+        opportunities. Research the complete cost before enrolling.
+      </p>
+    </div>
+
+    <div class="detail-grid">
+
+      <article class="detail-card">
+        <h3>What to Investigate</h3>
+
+        <ul>
+          <li>Program admission requirements</li>
+          <li>Total tuition and mandatory fees</li>
+          <li>Books, equipment, transportation, and living expenses</li>
+          <li>Scholarships and grants</li>
+          <li>Employer tuition assistance</li>
+          <li>Credit transfer and prior learning policies</li>
+          <li>Graduation and employment outcomes</li>
+          <li>Professional licensing requirements</li>
+        </ul>
+      </article>
+
+      <article class="detail-card">
+        <h3>Questions Before Applying</h3>
+
+        <ul>
+          <li>Does this program qualify me for my intended opportunity?</li>
+          <li>Can I study part-time or online?</li>
+          <li>What funding is available?</li>
+          <li>Are there lower-cost equivalent programs?</li>
+          <li>Can I gain experience while studying?</li>
+          <li>Will the credential be recognized by employers?</li>
+          <li>What happens if I need to pause my studies?</li>
+        </ul>
+      </article>
+
+    </div>
+
+    <div class="evidence-list">
+      <div class="evidence-item">
+        <strong>Financial evidence</strong>
+        Document tuition, fees, aid eligibility, payment schedules,
+        and the remaining amount you would need to cover.
+      </div>
+
+      <div class="evidence-item">
+        <strong>Academic evidence</strong>
+        Compare course requirements, program outcomes,
+        accreditation where applicable, and credit policies.
+      </div>
+
+      <div class="evidence-item">
+        <strong>Career evidence</strong>
+        Identify actual job requirements and determine whether
+        the program supports the roles you intend to pursue.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SELF EDUCATION -->
+<section class="section" id="self-education">
+  <div class="container">
+
+    <div class="section-heading">
+      <span class="eyebrow">Pathway 02</span>
+      <h2>Build a Self-Education Program</h2>
+      <p>
+        Independent learning works best when it has a defined
+        objective, a learning sequence, scheduled practice,
+        and a way to verify progress.
+      </p>
+    </div>
+
+    <div class="detail-grid">
+
+      <article class="detail-card">
+        <h3>Create a Learning Sequence</h3>
+
+        <ul>
+          <li>Identify the career or business outcome.</li>
+          <li>Research the skills required to reach it.</li>
+          <li>Separate foundational skills from advanced skills.</li>
+          <li>Find courses, books, and reliable instruction.</li>
+          <li>Schedule practice around your available time.</li>
+          <li>Build projects that apply what you learn.</li>
+          <li>Review mistakes and repeat difficult tasks.</li>
+        </ul>
+      </article>
+
+      <article class="detail-card">
+        <h3>Use an Evidence Ladder</h3>
+
+        <div class="evidence-list">
+          <div class="evidence-item">
+            <strong>Stage 1 — Understanding</strong>
+            Explain the concept in your own words.
+          </div>
+
+          <div class="evidence-item">
+            <strong>Stage 2 — Practice</strong>
+            Complete guided exercises and assignments.
+          </div>
+
+          <div class="evidence-item">
+            <strong>Stage 3 — Application</strong>
+            Use the skill to complete an independent project.
+          </div>
+
+          <div class="evidence-item">
+            <strong>Stage 4 — Demonstration</strong>
+            Present the result, explain your decisions,
+            and show how the work functions.
+          </div>
+
+          <div class="evidence-item">
+            <strong>Stage 5 — Improvement</strong>
+            Test, revise, and document what improved.
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- CAREER -->
+<section class="section section-light" id="career">
+  <div class="container">
+
+    <div class="section-heading">
+      <span class="eyebrow">Pathway 03</span>
+      <h2>Career Advancement and Skills Development</h2>
+      <p>
+        Career advancement requires more than collecting course
+        completions. Connect skills to responsibilities, work
+        outcomes, and the requirements of the next role.
+      </p>
+    </div>
+
+    <div class="detail-grid">
+
+      <article class="detail-card">
+        <h3>Identify the Skills Gap</h3>
+
+        <ul>
+          <li>Select a target job or career direction.</li>
+          <li>Review several current job descriptions.</li>
+          <li>Identify repeated technical and professional skills.</li>
+          <li>Separate required qualifications from preferred ones.</li>
+          <li>Compare those requirements with your current abilities.</li>
+          <li>Prioritize the gaps that matter most.</li>
+        </ul>
+      </article>
+
+      <article class="detail-card">
+        <h3>Translate Work Into Evidence</h3>
+
+        <ul>
+          <li>Document problems you helped solve.</li>
+          <li>Record processes you improved.</li>
+          <li>Track measurable results where available.</li>
+          <li>Save examples of completed work when permitted.</li>
+          <li>Collect relevant feedback and references.</li>
+          <li>Connect each result to a skill or responsibility.</li>
+        </ul>
+      </article>
+
+    </div>
+
+    <div class="evidence-list">
+      <div class="evidence-item">
+        <strong>Example: Operational improvement</strong>
+        Document the original process, the problem, your contribution,
+        the change made, and the resulting improvement.
+      </div>
+
+      <div class="evidence-item">
+        <strong>Example: Technical development</strong>
+        Build a project that demonstrates the tools, methods,
+        and problem-solving abilities required by the target role.
+      </div>
+
+      <div class="evidence-item">
+        <strong>Example: Leadership development</strong>
+        Document how you organized work, communicated expectations,
+        handled a problem, or helped a team complete an objective.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BUSINESS -->
+<section class="section" id="business">
+  <div class="container">
+
+    <div class="section-heading">
+      <span class="eyebrow">Pathway 04</span>
+      <h2>Entrepreneurship and Independent Opportunity</h2>
+      <p>
+        A business begins with a problem worth solving.
+        Research the market, test the solution, and understand
+        the financial requirements before investing heavily.
+      </p>
+    </div>
+
+    <div class="detail-grid">
+
+      <article class="detail-card">
+        <h3>Validate a Business Idea</h3>
+
+        <ul>
+          <li>Identify a specific customer group.</li>
+          <li>Find a recurring problem they experience.</li>
+          <li>Research how they currently solve it.</li>
+          <li>Investigate competing products and services.</li>
+          <li>Determine whether customers already pay for solutions.</li>
+          <li>Test a small version of your offer.</li>
+          <li>Collect feedback and evaluate actual demand.</li>
+        </ul>
+      </article>
+
+      <article class="detail-card">
+        <h3>Build the Business Foundation</h3>
+
+        <ul>
+          <li>Define the product or service.</li>
+          <li>Calculate startup and operating expenses.</li>
+          <li>Determine pricing and delivery requirements.</li>
+          <li>Research registration and legal obligations.</li>
+          <li>Identify potential grants and funding programs.</li>
+          <li>Create a customer acquisition strategy.</li>
+          <li>Track revenue, expenses, and customer results.</li>
+        </ul>
+      </article>
+
+    </div>
+
+    <div class="evidence-list">
+      <div class="evidence-item">
+        <strong>Customer evidence</strong>
+        Interviews, documented customer problems,
+        feedback, inquiries, and actual purchases.
+      </div>
+
+      <div class="evidence-item">
+        <strong>Product evidence</strong>
+        A working prototype, service demonstration,
+        sample deliverable, or tested offer.
+      </div>
+
+      <div class="evidence-item">
+        <strong>Financial evidence</strong>
+        Cost estimates, pricing assumptions,
+        sales records, and operating projections.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- RESOURCE MATRIX -->
+<section class="section section-light" id="matrix">
+  <div class="container">
+
+    <div class="section-heading">
+      <span class="eyebrow">Research and compare</span>
+      <h2>Elite Learning Resource Matrix</h2>
+      <p>
+        Explore learning providers, certifications, research tools,
+        and business resources. Filter by subject area and the type
+        of outcome you want to create.
+      </p>
+    </div>
+
+    <div class="matrix-controls">
+
+      <div class="control-group">
+        <label for="industryFilter">Filter by subject</label>
+        <select id="industryFilter">
+          <option value="all">All subject areas</option>
+          <option value="technology">Technology</option>
+          <option value="business">Business</option>
+          <option value="finance">Finance</option>
+          <option value="design">Design</option>
+          <option value="career">Career Research</option>
+          <option value="education">Education</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="outputFilter">Filter by outcome</label>
+        <select id="outputFilter">
+          <option value="all">All outcomes</option>
+          <option value="certification">Certification</option>
+          <option value="project">Project or Portfolio</option>
+          <option value="research">Research</option>
+          <option value="business">Business Development</option>
+          <option value="career">Career Preparation</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="levelFilter">Filter by level</label>
+        <select id="levelFilter">
+          <option value="all">All levels</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+        </select>
+      </div>
+
+    </div>
+
+    <p id="matrixCount" aria-live="polite">Showing all resources.</p>
+
+    <div class="table-wrap">
+      <table id="resourceTable">
+        <thead>
+          <tr>
+            <th>Resource</th>
+            <th>Subject</th>
+            <th>Learning or Opportunity</th>
+            <th>Outcome</th>
+            <th>Level</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr data-industry="technology" data-output="certification" data-level="beginner">
+            <td>
+              <span class="resource-name">Google Professional Certificates</span><br>
+              <a class="resource-link" href="https://grow.google/certificates/" target="_blank" rel="noopener noreferrer">Visit Google Certificates ↗</a>
+            </td>
+            <td>Technology</td>
+            <td>Career-focused learning programs</td>
+            <td>Certification</td>
+            <td>Beginner</td>
+          </tr>
+
+          <tr data-industry="finance" data-output="certification" data-level="beginner">
+            <td>
+              <span class="resource-name">CFA Institute Investment Foundations</span><br>
+              <a class="resource-link" href="https://www.cfainstitute.org/" target="_blank" rel="noopener noreferrer">Visit CFA Institute ↗</a>
+            </td>
+            <td>Finance</td>
+            <td>Investment industry fundamentals</td>
+            <td>Certification / Learning</td>
+            <td>Beginner</td>
+          </tr>
+
+          <tr data-industry="design" data-output="project" data-level="beginner">
+            <td>
+              <span class="resource-name">Google UX Design</span><br>
+              <a class="resource-link" href="https://grow.google/certificates/ux-design/" target="_blank" rel="noopener noreferrer">Explore UX Design ↗</a>
+            </td>
+            <td>Design</td>
+            <td>User experience and interface design</td>
+            <td>Portfolio Project</td>
+            <td>Beginner</td>
+          </tr>
+
+          <tr data-industry="technology" data-output="certification" data-level="beginner">
+            <td>
+              <span class="resource-name">AWS Cloud Practitioner</span><br>
+              <a class="resource-link" href="https://aws.amazon.com/certification/certified-cloud-practitioner/" target="_blank" rel="noopener noreferrer">Explore AWS ↗</a>
+            </td>
+            <td>Technology</td>
+            <td>Cloud computing fundamentals</td>
+            <td>Certification</td>
+            <td>Beginner</td>
+          </tr>
+
+          <tr data-industry="technology" data-output="project" data-level="beginner">
+            <td>
+              <span class="resource-name">freeCodeCamp</span><br>
+              <a class="resource-link" href="https://www.freecodecamp.org/" target="_blank" rel="noopener noreferrer">Visit freeCodeCamp ↗</a>
+            </td>
+            <td>Technology</td>
+            <td>Programming, web development, and projects</td>
+            <td>Projects / Certificates</td>
+            <td>Beginner</td>
+          </tr>
+
+          <tr data-industry="education" data-output="project" data-level="intermediate">
+            <td>
+              <span class="resource-name">MIT OpenCourseWare</span><br>
+              <a class="resource-link" href="https://ocw.mit.edu/" target="_blank" rel="noopener noreferrer">Visit MIT OCW ↗</a>
+            </td>
+            <td>Education</td>
+            <td>Open university-level course materials</td>
+            <td>Independent Study</td>
+            <td>Intermediate</td>
+          </tr>
+
+          <tr data-industry="education" data-output="project" data-level="beginner">
+            <td>
+              <span class="resource-name">Khan Academy</span><br>
+              <a class="resource-link" href="https://www.khanacademy.org/" target="_blank" rel="noopener noreferrer">Visit Khan Academy ↗</a>
+            </td>
+            <td>Education</td>
+            <td>Foundational and advanced subjects</td>
+            <td>Skill Development</td>
+            <td>Beginner</td>
+          </tr>
+
+          <tr data-industry="business" data-output="business" data-level="beginner">
+            <td>
+              <span class="resource-name">SBA Learning and Business Resources</span><br>
+              <a class="resource-link" href="https://www.sba.gov/" target="_blank" rel="noopener noreferrer">Visit SBA ↗</a>
+            </td>
+            <td>Business</td>
+            <td>Business planning, financing, and guidance</td>
+            <td>Business Development</td>
+            <td>Beginner</td>
+          </tr>
+
+          <tr data-industry="business" data-output="business" data-level="beginner">
+            <td>
+              <span class="resource-name">SCORE</span><br>
+              <a class="resource-link" href="https://www.score.org/" target="_blank" rel="noopener noreferrer">Visit SCORE ↗</a>
+            </td>
+            <td>Business</td>
+            <td>Mentoring and business education</td>
+            <td>Business Development</td>
+            <td>Beginner</td>
+          </tr>
+
+          <tr data-industry="career" data-output="career" data-level="beginner">
+            <td>
+              <span class="resource-name">O*NET Online</span><br>
+              <a class="resource-link" href="https://www.onetonline.org/" target="_blank" rel="noopener noreferrer">Visit O*NET ↗</a>
+            </td>
+            <td>Career Research</td>
+            <td>Occupations, skills, and work activities</td>
+            <td>Career Preparation</td>
+            <td>Beginner</td>
+          </tr>
+
+          <tr data-industry="career" data-output="research" data-level="beginner">
+            <td>
+              <span class="resource-name">BLS Occupational Outlook Handbook</span><br>
+              <a class="resource-link" href="https://www.bls.gov/ooh/" target="_blank" rel="noopener noreferrer">Visit BLS ↗</a>
+            </td>
+            <td>Career Research</td>
+            <td>Occupational outlook, pay, and requirements</td>
+            <td>Research</td>
+            <td>Beginner</td>
+          </tr>
+
+          <tr data-industry="career" data-output="career" data-level="beginner">
+            <td>
+              <span class="resource-name">CareerOneStop</span><br>
+              <a class="resource-link" href="https://www.careeronestop.org/" target="_blank" rel="noopener noreferrer">Visit CareerOneStop ↗</a>
+            </td>
+            <td>Career Research</td>
+            <td>Training, career exploration, and employment</td>
+            <td>Career Preparation</td>
+            <td>Beginner</td>
+          </tr>
+
+          <tr data-industry="education" data-output="research" data-level="beginner">
+            <td>
+              <span class="resource-name">edX</span><br>
+              <a class="resource-link" href="https://www.edx.org/" target="_blank" rel="noopener noreferrer">Visit edX ↗</a>
+            </td>
+            <td>Education</td>
+            <td>University and professional courses</td>
+            <td>Research / Certification</td>
+            <td>Beginner</td>
+          </tr>
+
+          <tr data-industry="finance" data-output="research" data-level="intermediate">
+            <td>
+              <span class="resource-name">Federal Reserve Education</span><br>
+              <a class="resource-link" href="https://www.federalreserveeducation.org/" target="_blank" rel="noopener noreferrer">Visit Resource ↗</a>
+            </td>
+            <td>Finance</td>
+            <td>Economic and financial education</td>
+            <td>Research</td>
+            <td>Intermediate</td>
+          </tr>
+
+          <tr data-industry="business" data-output="research" data-level="intermediate">
+            <td>
+              <span class="resource-name">U.S. Census Business Resources</span><br>
+              <a class="resource-link" href="https://www.census.gov/programs-surveys/susb.html" target="_blank" rel="noopener noreferrer">Visit Census ↗</a>
+            </td>
+            <td>Business</td>
+            <td>Business statistics and market research</td>
+            <td>Research</td>
+            <td>Intermediate</td>
+          </tr>
+
+          <tr data-industry="technology" data-output="certification" data-level="intermediate">
+            <td>
+              <span class="resource-name">Microsoft Learn</span><br>
+              <a class="resource-link" href="https://learn.microsoft.com/training/" target="_blank" rel="noopener noreferrer">Visit Microsoft Learn ↗</a>
+            </td>
+            <td>Technology</td>
+            <td>Technical training and certification preparation</td>
+            <td>Certification</td>
+            <td>Intermediate</td>
+          </tr>
+
+          <tr data-industry="design" data-output="project" data-level="intermediate">
+            <td>
+              <span class="resource-name">Figma Learn</span><br>
+              <a class="resource-link" href="https://help.figma.com/hc/en-us/categories/360002042553-Learn-design" target="_blank" rel="noopener noreferrer">Explore Figma Learning ↗</a>
+            </td>
+            <td>Design</td>
+            <td>Interface design and prototyping</td>
+            <td>Portfolio Project</td>
+            <td>Intermediate</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="no-results" id="noResults">
+      No resources match all of your selected filters.
+      Try changing one or more filters.
+    </div>
+
+  </div>
+</section>
+
+<!-- RESOURCE VAULT -->
+<section class="section" id="vault">
+  <div class="container">
+
+    <div class="section-heading">
+      <span class="eyebrow">PathKeeper Resource Vault</span>
+      <h2>Find Tools That Support Your Next Move</h2>
+      <p>
+        Use these resource collections to investigate funding,
+        learning materials, business development, and career options.
+      </p>
+    </div>
+
+    <div class="vault-grid">
+
+      <article class="vault-card">
+        <div class="vault-icon">🎓</div>
+        <h3>Scholarship and Financial Aid Tracker</h3>
+        <p>
+          Research federal financial aid, scholarship opportunities,
+          eligibility requirements, deadlines, and application documents.
+        </p>
+        <a href="https://studentaid.gov/" target="_blank" rel="noopener noreferrer">Federal Student Aid ↗</a>
+        <a href="https://www.fastweb.com/" target="_blank" rel="noopener noreferrer">Fastweb Scholarships ↗</a>
+        <a href="https://bigfuture.collegeboard.org/" target="_blank" rel="noopener noreferrer">BigFuture ↗</a>
+      </article>
+
+      <article class="vault-card">
+        <div class="vault-icon">📖</div>
+        <h3>Free Textbook Directory</h3>
+        <p>
+          Locate open textbooks and educational materials
+          that can reduce the cost of independent study.
+        </p>
+        <a href="https://openstax.org/" target="_blank" rel="noopener noreferrer">OpenStax ↗</a>
+        <a href="https://open.umn.edu/opentextbooks" target="_blank" rel="noopener noreferrer">Open Textbook Library ↗</a>
+        <a href="https://ocw.mit.edu/" target="_blank" rel="noopener noreferrer">MIT OpenCourseWare ↗</a>
+      </article>
+
+      <article class="vault-card">
+        <div class="vault-icon">💰</div>
+        <h3>Grant and Funding Research</h3>
+        <p>
+          Investigate government funding programs, grant announcements,
+          eligibility, and application requirements.
+        </p>
+        <a href="https://www.grants.gov/" target="_blank" rel="noopener noreferrer">Grants.gov ↗</a>
+        <a href="https://www.sba.gov/funding-programs/grants" target="_blank" rel="noopener noreferrer">SBA Grant Information ↗</a>
+        <a href="https://www.sba.gov/funding-programs/loans" target="_blank" rel="noopener noreferrer">SBA Loan Programs ↗</a>
+      </article>
+
+      <article class="vault-card">
+        <div class="vault-icon">🧭</div>
+        <h3>Career Exploration Directory</h3>
+        <p>
+          Research occupations, required skills, salary information,
+          job outlook, and available career training.
+        </p>
+        <a href="https://www.onetonline.org/" target="_blank" rel="noopener noreferrer">O*NET ↗</a>
+        <a href="https://www.bls.gov/ooh/" target="_blank" rel="noopener noreferrer">Occupational Outlook Handbook ↗</a>
+        <a href="https://www.careeronestop.org/" target="_blank" rel="noopener noreferrer">CareerOneStop ↗</a>
+      </article>
+
+      <article class="vault-card">
+        <div class="vault-icon">🛠️</div>
+        <h3>Skills and Certification Library</h3>
+        <p>
+          Find structured learning programs and technical resources
+          for developing professional capabilities.
+        </p>
+        <a href="https://www.freecodecamp.org/" target="_blank" rel="noopener noreferrer">freeCodeCamp ↗</a>
+        <a href="https://www.coursera.org/" target="_blank" rel="noopener noreferrer">Coursera ↗</a>
+        <a href="https://learn.microsoft.com/training/" target="_blank" rel="noopener noreferrer">Microsoft Learn ↗</a>
+      </article>
+
+      <article class="vault-card">
+        <div class="vault-icon">🏢</div>
+        <h3>Business and Startup Support</h3>
+        <p>
+          Explore business planning, mentoring, intellectual property,
+          market research, and startup support.
+        </p>
+        <a href="https://www.sba.gov/" target="_blank" rel="noopener noreferrer">Small Business Administration ↗</a>
+        <a href="https://www.score.org/" target="_blank" rel="noopener noreferrer">SCORE Mentoring ↗</a>
+        <a href="https://www.uspto.gov/" target="_blank" rel="noopener noreferrer">USPTO ↗</a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- CHECKLIST -->
+<section class="section section-light" id="checklist">
+  <div class="container">
+
+    <div class="section-heading">
+      <span class="eyebrow">Opportunity preparation</span>
+      <h2>Your Opportunity Research Checklist</h2>
+      <p>
+        Use this checklist to organize your research before
+        committing time, money, or resources to an opportunity.
+        Your progress updates automatically as you complete tasks.
+      </p>
+    </div>
+
+    <div class="checklist-layout">
+
+      <div class="checklist-panel">
+        <h3>Research and Preparation Tasks</h3>
+
+        <label class="check-item">
+          <input type="checkbox" class="task-check">
+          <span>I have identified a specific career, education, or business goal.</span>
+        </label>
+
+        <label class="check-item">
+          <input type="checkbox" class="task-check">
+          <span>I have researched the requirements for reaching that goal.</span>
+        </label>
+
+        <label class="check-item">
+          <input type="checkbox" class="task-check">
+          <span>I have compared multiple programs, providers, or opportunities.</span>
+        </label>
+
+        <label class="check-item">
+          <input type="checkbox" class="task-check">
+          <span>I have estimated the financial cost and available funding.</span>
+        </label>
+
+        <label class="check-item">
+          <input type="checkbox" class="task-check">
+          <span>I have identified the skills I need to develop.</span>
+        </label>
+
+        <label class="check-item">
+          <input type="checkbox" class="task-check">
+          <span>I have selected learning materials or a training program.</span>
+        </label>
+
+        <label class="check-item">
+          <input type="checkbox" class="task-check">
+          <span>I have created a realistic schedule for learning and practice.</span>
+        </label>
+
+        <label class="check-item">
+          <input type="checkbox" class="task-check">
+          <span>I have identified a project or practical activity to demonstrate my skills.</span>
+        </label>
+
+        <label class="check-item">
+          <input type="checkbox" class="task-check">
+          <span>I have identified how I will document and evaluate my results.</span>
+        </label>
+
+        <label class="check-item">
+          <input type="checkbox" class="task-check">
+          <span>I have identified the next person, organization, or opportunity to contact.</span>
+        </label>
+
+      </div>
+
+      <aside class="progress-panel">
+        <h3>Research Progress</h3>
+
+        <p>
+          Track how much of your opportunity preparation
+          you have completed.
+        </p>
+
+        <div class="progress-number" id="progressNumber">0%</div>
+
+        <div
+          class="progress-track"
+          role="progressbar"
+          aria-label="Checklist completion"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+          id="progressBar"
+        >
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="progress-status" id="progressStatus" aria-live="polite">
+          Start with your goal and research requirements.
+        </div>
+
+        <button class="reset-button" id="resetChecklist" type="button">
+          Reset Checklist
+        </button>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<!-- RESOURCE INDEX -->
+<section class="section" id="resource-index">
+  <div class="container">
+
+    <div class="section-heading">
+      <span class="eyebrow">Research directory</span>
+      <h2>Quick Access Resource Index</h2>
+      <p>
+        Browse useful starting points by category.
+        Always verify eligibility, pricing, deadlines,
+        and current program details directly with the provider.
+      </p>
+    </div>
+
+    <div class="index-grid">
+
+      <div class="index-group">
+        <h3>Education and Funding</h3>
+        <a href="https://studentaid.gov/" target="_blank" rel="noopener noreferrer">Federal Student Aid</a>
+        <a href="https://www.fastweb.com/" target="_blank" rel="noopener noreferrer">Fastweb</a>
+        <a href="https://bigfuture.collegeboard.org/" target="_blank" rel="noopener noreferrer">BigFuture</a>
+        <a href="https://www.scholarships.com/" target="_blank" rel="noopener noreferrer">Scholarships.com</a>
+        <a href="https://www.petersons.com/" target="_blank" rel="noopener noreferrer">Peterson's</a>
+      </div>
+
+      <div class="index-group">
+        <h3>Independent Learning</h3>
+        <a href="https://www.freecodecamp.org/" target="_blank" rel="noopener noreferrer">freeCodeCamp</a>
+        <a href="https://www.edx.org/" target="_blank" rel="noopener noreferrer">edX</a>
+        <a href="https://www.coursera.org/" target="_blank" rel="noopener noreferrer">Coursera</a>
+        <a href="https://ocw.mit.edu/" target="_blank" rel="noopener noreferrer">MIT OpenCourseWare</a>
+        <a href="https://www.khanacademy.org/" target="_blank" rel="noopener noreferrer">Khan Academy</a>
+      </div>
+
+      <div class="index-group">
+        <h3>Career Development</h3>
+        <a href="https://www.onetonline.org/" target="_blank" rel="noopener noreferrer">O*NET</a>
+        <a href="https://www.bls.gov/ooh/" target="_blank" rel="noopener noreferrer">BLS Occupational Outlook</a>
+        <a href="https://www.careeronestop.org/" target="_blank" rel="noopener noreferrer">CareerOneStop</a>
+        <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://www.usajobs.gov/" target="_blank" rel="noopener noreferrer">USAJOBS</a>
+      </div>
+
+      <div class="index-group">
+        <h3>Business Development</h3>
+        <a href="https://www.sba.gov/" target="_blank" rel="noopener noreferrer">SBA</a>
+        <a href="https://www.score.org/" target="_blank" rel="noopener noreferrer">SCORE</a>
+        <a href="https://www.uspto.gov/" target="_blank" rel="noopener noreferrer">USPTO</a>
+        <a href="https://www.census.gov/" target="_blank" rel="noopener noreferrer">U.S. Census Bureau</a>
+        <a href="https://www.grants.gov/" target="_blank" rel="noopener noreferrer">Grants.gov</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-content">
+    <div>
+      <strong>PATHKEEPER</strong>
+      <p>Build knowledge. Develop capabilities. Create opportunities.</p>
+    </div>
+
+    <p>Opportunity Intelligence Center | Learning and Resource Vault</p>
+  </div>
+</footer>
+
+</main>
+
+<script>
+/* =====================================
+   RESOURCE MATRIX FILTERING
+===================================== */
+
+const industryFilter = document.getElementById("industryFilter");
+const outputFilter = document.getElementById("outputFilter");
+const levelFilter = document.getElementById("levelFilter");
+
+const resourceRows = Array.from(
+  document.querySelectorAll("#resourceTable tbody tr")
+);
+
+const matrixCount = document.getElementById("matrixCount");
+const noResults = document.getElementById("noResults");
+
+function filterResources() {
+  const industry = industryFilter.value;
+  const output = outputFilter.value;
+  const level = levelFilter.value;
+
+  let visibleCount = 0;
+
+  resourceRows.forEach(row => {
+    const matchesIndustry =
+      industry === "all" ||
+      row.dataset.industry === industry;
+
+    const matchesOutput =
+      output === "all" ||
+      row.dataset.output === output;
+
+    const matchesLevel =
+      level === "all" ||
+      row.dataset.level === level;
+
+    const isVisible =
+      matchesIndustry &&
+      matchesOutput &&
+      matchesLevel;
+
+    row.style.display = isVisible ? "" : "none";
+
+    if (isVisible) {
+      visibleCount++;
+    }
+  });
+
+  matrixCount.textContent =
+    `Showing ${visibleCount} of ${resourceRows.length} resources.`;
+
+  noResults.style.display =
+    visibleCount === 0 ? "block" : "none";
+}
+
+industryFilter.addEventListener("change", filterResources);
+outputFilter.addEventListener("change", filterResources);
+levelFilter.addEventListener("change", filterResources);
+
+filterResources();
+
+
+/* =====================================
+   CHECKLIST PROGRESS
+===================================== */
+
+const checkboxes = Array.from(
+  document.querySelectorAll(".task-check")
+);
+
+const progressNumber = document.getElementById("progressNumber");
+const progressFill = document.getElementById("progressFill");
+const progressStatus = document.getElementById("progressStatus");
+const progressBar = document.getElementById("progressBar");
+const resetChecklist = document.getElementById("resetChecklist");
+
+function updateProgress() {
+  const completed = checkboxes.filter(
+    checkbox => checkbox.checked
+  ).length;
+
+  const total = checkboxes.length;
+
+  const percentage = total > 0
+    ? Math.round((completed / total) * 100)
+    : 0;
+
+  progressNumber.textContent = percentage + "%";
+  progressFill.style.width = percentage + "%";
+
+  progressBar.setAttribute("aria-valuenow", percentage);
+
+  if (percentage === 100) {
+    progressStatus.textContent =
+      "All checklist tasks completed. Review your research and decide on your next action.";
+  } else if (percentage >= 70) {
+    progressStatus.textContent =
+      "Strong progress. Review the remaining tasks before committing.";
+  } else if (percentage >= 30) {
+    progressStatus.textContent =
+      "You are building your opportunity foundation. Keep going.";
+  } else if (percentage > 0) {
+    progressStatus.textContent =
+      "You have started. Continue researching your requirements.";
+  } else {
+    progressStatus.textContent =
+      "Start with your goal and research requirements.";
+  }
+}
+
+checkboxes.forEach(checkbox => {
+  checkbox.addEventListener("change", updateProgress);
+});
+
+resetChecklist.addEventListener("click", () => {
+  checkboxes.forEach(checkbox => {
+    checkbox.checked = false;
+  });
+
+  updateProgress();
+});
+
+updateProgress();
+</script>
+
+</body>
+</html>
