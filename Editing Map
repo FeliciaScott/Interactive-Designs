@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site Editing Command Center</title>
+
+<style>
+:root {
+  --forest: #193c30;
+  --green: #638775;
+  --sage: #e6eee7;
+  --cream: #f8f6ef;
+  --brown: #73543e;
+  --sand: #eee4d6;
+  --ink: #25352d;
+  --muted: #718078;
+  --white: #ffffff;
+  --border: #dce3dc;
+  --red: #a64f42;
+  --shadow: 0 8px 24px rgba(25,60,48,.06);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.55;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+button { cursor: pointer; }
+
+button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+  outline: 3px solid #9cbaa5;
+  outline-offset: 2px;
+}
+
+header {
+  background: var(--forest);
+  color: white;
+  padding: 32px 20px;
+}
+
+.header-inner, main, footer {
+  max-width: 1180px;
+  margin: auto;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #c4d8c9;
+}
+
+h1 {
+  font-size: clamp(27px, 5vw, 43px);
+  line-height: 1.12;
+  margin: 12px 0;
+}
+
+header p {
+  max-width: 690px;
+  color: #e0e9e1;
+  margin-bottom: 0;
+}
+
+main { padding: 22px 16px 60px; }
+
+.section {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 22px;
+  margin: 18px 0;
+  box-shadow: var(--shadow);
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 17px;
+}
+
+h2 { font-size: 22px; margin: 0 0 5px; }
+h3 { font-size: 16px; margin: 0 0 8px; }
+
+.muted { color: var(--muted); font-size: 13px; }
+.small { font-size: 12px; color: var(--muted); }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.stat {
+  padding: 17px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.stat-number {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--forest);
+  line-height: 1.2;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.progress-track {
+  background: #e8ece7;
+  height: 9px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background: var(--green);
+  height: 100%;
+  width: 0;
+  transition: width .2s ease;
+}
+
+.tree {
+  display: grid;
+  gap: 10px;
+}
+
+.tree-root {
+  background: var(--forest);
+  color: white;
+  text-align: center;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.tree-root .small { color: #d8e6dc; }
+
+.tree-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
+}
+
+.tree-node {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.node-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 13px;
+  background: var(--sage);
+  font-weight: 700;
+}
+
+.node-children { padding: 10px 12px; }
+
+.child {
+  padding: 8px 0 8px 13px;
+  border-left: 2px solid #c8d8ca;
+  margin: 5px 0 5px 4px;
+  font-size: 13px;
+}
+
+.node-footer {
+  padding: 0 12px 12px;
+}
+
+.badge {
+  display: inline-block;
+  background: var(--sand);
+  color: var(--brown);
+  border-radius: 20px;
+  padding: 3px 8px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.badge.green {
+  background: var(--sage);
+  color: var(--forest);
+}
+
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+th, td {
+  text-align: left;
+  padding: 11px 9px;
+  border-bottom: 1px solid #edf0eb;
+  vertical-align: top;
+}
+
+th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--muted);
+  background: #fafbf8;
+}
+
+td input, td select {
+  min-width: 105px;
+  max-width: 180px;
+  width: 100%;
+}
+
+input, select, textarea {
+  background: white;
+  color: var(--ink);
+  border: 1px solid #ccd7cd;
+  border-radius: 7px;
+  padding: 9px 10px;
+  width: 100%;
+}
+
+textarea { min-height: 80px; resize: vertical; }
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.field { min-width: 0; }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 12px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.btn {
+  border: 0;
+  background: var(--forest);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.btn.secondary {
+  background: var(--sage);
+  color: var(--forest);
+}
+
+.btn.brown {
+  background: var(--brown);
+  color: white;
+}
+
+.btn.danger {
+  background: #f5e7e3;
+  color: var(--red);
+}
+
+.btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.timeline {
+  display: grid;
+  gap: 12px;
+}
+
+.day {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 15px;
+  display: grid;
+  grid-template-columns: 74px 1fr auto;
+  align-items: start;
+  gap: 13px;
+}
+
+.day-number {
+  background: var(--sage);
+  color: var(--forest);
+  text-align: center;
+  padding: 10px 5px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.day h3 { margin-bottom: 4px; }
+.day ul { margin: 8px 0; padding-left: 18px; font-size: 13px; }
+.day.completed { background: #f8fbf7; }
+.day.completed h3 { text-decoration: line-through; color: var(--muted); }
+
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 400;
+  margin: 10px 0;
+}
+
+.check-row input {
+  width: auto;
+  margin-top: 4px;
+}
+
+.link-map {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.link-card {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 13px;
+}
+
+.link-card strong { display: block; margin-bottom: 6px; }
+
+.link-destination {
+  display: inline-block;
+  background: var(--sage);
+  color: var(--forest);
+  border-radius: 5px;
+  padding: 4px 7px;
+  margin: 3px 3px 0 0;
+  font-size: 11px;
+}
+
+.note {
+  background: #f6f0e6;
+  border-left: 4px solid var(--brown);
+  border-radius: 6px;
+  padding: 13px;
+  font-size: 13px;
+  margin: 12px 0;
+}
+
+.empty {
+  padding: 22px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 13px;
+}
+
+footer {
+  padding: 0 16px 35px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width: 700px) {
+  .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .tree-grid, .link-map { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+  .day { grid-template-columns: 58px 1fr; }
+  .day > label { grid-column: 2; }
+  .section { padding: 16px; }
+  .section-heading { flex-direction: column; }
+  h2 { font-size: 20px; }
+}
+
+@media print {
+  body { background: white; }
+  header { background: white; color: black; padding: 15px 0; }
+  header p, .eyebrow { color: #444; }
+  main { padding: 0; }
+  .section, .stat { box-shadow: none; break-inside: avoid; }
+  .actions, .no-print, .add-form { display: none !important; }
+  .tree-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="header-inner">
+    <div class="eyebrow">PathKeeper • Website Operations</div>
+    <h1>Site Editing<br>Command Center</h1>
+    <p>Map the site. Organize the pages. Connect the resources. Edit in the right order and publish with confidence.</p>
+  </div>
+</header>
+
+<main>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-number" id="pageCount">8</div>
+      <div class="stat-label">Pages in your inventory</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number" id="completedCount">0</div>
+      <div class="stat-label">Pages completed</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number" id="taskCount">0%</div>
+      <div class="stat-label">Timeline completed</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number" id="hoursCount">15</div>
+      <div class="stat-label">Estimated hours remaining</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-heading">
+      <div>
+        <h2>01. Site editing overview</h2>
+        <p class="muted">Use this planner as your working map. The starter list uses PathKeeper page names discussed in prior work. Google Sites requires sign-in for the editor, so this is not a verified extraction of the live menu.</p>
+      </div>
+      <span class="badge">Editable plan</span>
+    </div>
+    <div class="note">
+      <strong>Recommended editing order:</strong> Audit existing pages → organize the page tree → revise the main pages → connect the links → test the published site.
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="overallProgress"></div>
+    </div>
+    <p class="small" id="overallLabel">Your overall editing progress will appear here.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-heading">
+      <div>
+        <h2>02. Recommended page tree</h2>
+        <p class="muted">Expanded starter inventory based on the PathKeeper page and section names discussed so far. Confirm every title against the live Pages panel; the private editor menu could not be read automatically.</p>
+      </div>
+    </div>
+
+    <div class="tree">
+      <div class="tree-root">
+        <strong>HOME</strong>
+        <div class="small">Mission • Start here • Featured pathways</div>
+      </div>
+
+      <div class="tree-grid">
+        <div class="tree-node">
+          <div class="node-title">1. Intelligence Center <span class="badge">Research</span></div>
+          <div class="node-children">
+            <div class="child">Facts, patterns and comparisons</div>
+            <div class="child">Decision frameworks</div>
+            <div class="child">Resource analysis</div>
+            <div class="child">Location Power Differential Mapping</div>
+            <div class="child">Search by category and location</div>
+          </div>
+          <div class="node-footer"><span class="small">Connect to: Atlas, Mobility, Planning</span></div>
+        </div>
+
+        <div class="tree-node">
+          <div class="node-title">2. Opportunity Atlas <span class="badge">Discover</span></div>
+          <div class="node-children">
+            <div class="child">Scholarships and fellowships</div>
+            <div class="child">Grants and funding</div>
+            <div class="child">Internships and volunteering</div>
+            <div class="child">Competitions and certificates</div>
+            <div class="child">Education and study abroad</div>
+            <div class="child">Certificates and competitions</div>
+            <div class="child">Residency and startup opportunities</div>
+            <div class="child">Accelerators and mentorship</div>
+            <div class="child">Technology opportunities</div>
+          </div>
+          <div class="node-footer"><span class="small">Connect to: Intelligence, Planning, Execution</span></div>
+        </div>
+
+        <div class="tree-node">
+          <div class="node-title">3. Mobility & Location <span class="badge">Compare</span></div>
+          <div class="node-children">
+            <div class="child">Cost of living and affordability</div>
+            <div class="child">Employment and industry</div>
+            <div class="child">Education and local resources</div>
+            <div class="child">Transportation and access</div>
+          </div>
+          <div class="node-footer"><span class="small">Connect to: Intelligence, Atlas, Planning</span></div>
+        </div>
+
+        <div class="tree-node">
+          <div class="node-title">4. Career Planning <span class="badge">Plan</span></div>
+          <div class="node-children">
+            <div class="child">Define a career goal</div>
+            <div class="child">Create a weekly work plan</div>
+            <div class="child">Build skills and a portfolio</div>
+            <div class="child">Review progress</div>
+            <div class="child">Problem Solving Center</div>
+            <div class="child">Career Intelligence Lab</div>
+            <div class="child">Focus Champions</div>
+            <div class="child">Elevate Learning Network v3</div>
+          </div>
+          <div class="node-footer"><span class="small">Connect to: Atlas, Resources, Execution</span></div>
+        </div>
+
+        <div class="tree-node">
+          <div class="node-title">5. Execution & Progress <span class="badge">Act</span></div>
+          <div class="node-children">
+            <div class="child">Action checklist</div>
+            <div class="child">Deadlines and applications</div>
+            <div class="child">Evidence of completed work</div>
+            <div class="child">WorkProof / Evidence Block</div>
+            <div class="child">Portfolio Operator / PortfolioOS</div>
+          </div>
+          <div class="node-footer"><span class="small">Connect to: Planning, Atlas</span></div>
+        </div>
+
+        <div class="tree-node">
+          <div class="node-title">6. Resource Vault <span class="badge">Tools</span></div>
+          <div class="node-children">
+            <div class="child">Guides and templates</div>
+            <div class="child">Official application resources</div>
+            <div class="child">Research and learning tools</div>
+            <div class="child">Resource Intelligence Center</div>
+          </div>
+          <div class="node-footer"><span class="small">Connect to: All relevant topic pages</span></div>
+        </div>
+
+        <div class="tree-node">
+          <div class="node-title">7. About & How to Use</div>
+          <div class="node-children">
+            <div class="child">Site mission</div>
+            <div class="child">Navigation guide</div>
+            <div class="child">How to get started</div>
+          </div>
+          <div class="node-footer"><span class="small">Connect to: Home and main sections</span></div>
+        </div>
+
+        <div class="tree-node">
+          <div class="node-title">8. Future Expansion <span class="badge">Optional</span></div>
+          <div class="node-children">
+            <div class="child">Problem Solving Center</div>
+            <div class="child">Career Intelligence Lab</div>
+            <div class="child">WorkProof / portfolio tools</div>
+          </div>
+          <div class="node-footer"><span class="small">Only create separate pages when needed</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-heading">
+      <div>
+        <h2>03. Page inventory</h2>
+        <p class="muted">This starter inventory includes 32 known or previously discussed page/section names. It is not a verified scrape of the private editor menu. Confirm the names, add any missing pages, and paste published URLs as you audit.</p>
+      </div>
+      <button class="btn secondary no-print" onclick="exportPages()">Export inventory CSV</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Page title</th>
+            <th>Parent</th>
+            <th>Action</th>
+            <th>Status</th>
+            <th>Existing URL</th>
+            <th class="no-print">Remove</th>
+          </tr>
+        </thead>
+        <tbody id="pageRows"></tbody>
+      </table>
+    </div>
+
+    <form id="addPageForm" class="add-form">
+      <h3 style="margin-top:20px">Add an existing or planned page</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label for="newPageName">Page title</label>
+          <input id="newPageName" required placeholder="e.g. Scholarship Research">
+        </div>
+        <div class="field">
+          <label for="newPageParent">Parent page</label>
+          <select id="newPageParent">
+            <option>Home</option>
+            <option>Intelligence Center</option>
+            <option>Opportunity Atlas</option>
+            <option>Mobility & Location Research</option>
+            <option>Career Planning</option>
+            <option>Execution & Progress</option>
+            <option>Resource Vault</option>
+            <option>About & How to Use</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="newPageAction">Editing decision</label>
+          <select id="newPageAction">
+            <option>Keep</option>
+            <option>Rename</option>
+            <option>Merge</option>
+            <option>Move</option>
+            <option>Create</option>
+            <option>Review</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit">+ Add page</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="section">
+    <div class="section-heading">
+      <div>
+        <h2>04. Where pages should link</h2>
+        <p class="muted">Add these connections when editing. Make the next step obvious to visitors.</p>
+      </div>
+    </div>
+    <div class="link-map">
+      <div class="link-card">
+        <strong>Home</strong>
+        <span class="link-destination">Intelligence Center</span>
+        <span class="link-destination">Opportunity Atlas</span>
+        <span class="link-destination">Mobility</span>
+        <span class="link-destination">Career Planning</span>
+      </div>
+      <div class="link-card">
+        <strong>Intelligence Center</strong>
+        <span class="link-destination">Opportunity Atlas</span>
+        <span class="link-destination">Mobility</span>
+        <span class="link-destination">Resource Vault</span>
+      </div>
+      <div class="link-card">
+        <strong>Opportunity Atlas</strong>
+        <span class="link-destination">Intelligence Center</span>
+        <span class="link-destination">Career Planning</span>
+        <span class="link-destination">Execution & Progress</span>
+      </div>
+      <div class="link-card">
+        <strong>Mobility & Location Research</strong>
+        <span class="link-destination">Intelligence Center</span>
+        <span class="link-destination">Opportunity Atlas</span>
+        <span class="link-destination">Career Planning</span>
+      </div>
+      <div class="link-card">
+        <strong>Career Planning</strong>
+        <span class="link-destination">Opportunity Atlas</span>
+        <span class="link-destination">Resource Vault</span>
+        <span class="link-destination">Execution & Progress</span>
+      </div>
+      <div class="link-card">
+        <strong>Execution & Progress</strong>
+        <span class="link-destination">Career Planning</span>
+        <span class="link-destination">Opportunity Atlas</span>
+      </div>
+      <div class="link-card">
+        <strong>Resource Vault</strong>
+        <span class="link-destination">Relevant topic pages</span>
+        <span class="link-destination">Career Planning</span>
+      </div>
+      <div class="link-card">
+        <strong>About & How to Use</strong>
+        <span class="link-destination">Home</span>
+        <span class="link-destination">All main sections</span>
+      </div>
+    </div>
+    <div class="note">
+      <strong>Important:</strong> These are planned links, not working links to your live site. Add the real page URLs in Google Sites using its page-link picker. Keep one authoritative version of each topic and link to it from related pages.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-heading">
+      <div>
+        <h2>05. Six-day editing timeline</h2>
+        <p class="muted">Estimated effort: 12–18 hours. Check off the work as you complete it.</p>
+      </div>
+      <span class="badge green" id="timelineBadge">0 of 6 days</span>
+    </div>
+    <div class="timeline" id="timeline">
+      <div class="day" data-day="1">
+        <div class="day-number">DAY 01</div>
+        <div>
+          <h3>Audit the existing site</h3>
+          <p class="muted">2–3 hours</p>
+          <ul>
+            <li>Record every page and subpage title.</li>
+            <li>Copy each current published URL.</li>
+            <li>Mark pages to keep, rename, merge, move or remove.</li>
+            <li>Identify duplicate or incomplete content.</li>
+          </ul>
+        </div>
+        <label class="check-row"><input type="checkbox" class="day-check"> Done</label>
+      </div>
+
+      <div class="day" data-day="2">
+        <div class="day-number">DAY 02</div>
+        <div>
+          <h3>Organize the page tree</h3>
+          <p class="muted">2–3 hours</p>
+          <ul>
+            <li>Choose the primary navigation pages.</li>
+            <li>Move related pages under the correct parents.</li>
+            <li>Standardize names and page order.</li>
+            <li>Decide which topics do not need separate pages.</li>
+          </ul>
+        </div>
+        <label class="check-row"><input type="checkbox" class="day-check"> Done</label>
+      </div>
+
+      <div class="day" data-day="3">
+        <div class="day-number">DAY 03</div>
+        <div>
+          <h3>Edit the main entry pages</h3>
+          <p class="muted">2–3 hours</p>
+          <ul>
+            <li>Revise Home and the Intelligence Center.</li>
+            <li>Improve the Opportunity Atlas.</li>
+            <li>Make introductions, headings and next steps clear.</li>
+          </ul>
+        </div>
+        <label class="check-row"><input type="checkbox" class="day-check"> Done</label>
+      </div>
+
+      <div class="day" data-day="4">
+        <div class="day-number">DAY 04</div>
+        <div>
+          <h3>Edit location and planning pages</h3>
+          <p class="muted">2–3 hours</p>
+          <ul>
+            <li>Revise Mobility and Location Research.</li>
+            <li>Connect research to practical decisions.</li>
+            <li>Improve Career Planning and its action steps.</li>
+          </ul>
+        </div>
+        <label class="check-row"><input type="checkbox" class="day-check"> Done</label>
+      </div>
+
+      <div class="day" data-day="5">
+        <div class="day-number">DAY 05</div>
+        <div>
+          <h3>Connect resources and action steps</h3>
+          <p class="muted">2–3 hours</p>
+          <ul>
+            <li>Finish Execution and Resource Vault pages.</li>
+            <li>Add relevant links between pages.</li>
+            <li>Check external resources and application destinations.</li>
+          </ul>
+        </div>
+        <label class="check-row"><input type="checkbox" class="day-check"> Done</label>
+      </div>
+
+      <div class="day" data-day="6">
+        <div class="day-number">DAY 06</div>
+        <div>
+          <h3>Test and publish</h3>
+          <p class="muted">2–3 hours</p>
+          <ul>
+            <li>Open every main page in the published site.</li>
+            <li>Test navigation, embedded tools and external links.</li>
+            <li>Check mobile layout and readability.</li>
+            <li>Publish the final changes and repeat the key checks.</li>
+          </ul>
+        </div>
+        <label class="check-row"><input type="checkbox" class="day-check"> Done</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-heading">
+      <div>
+        <h2>06. Final quality-control checklist</h2>
+        <p class="muted">Use this before considering the editing project complete.</p>
+      </div>
+    </div>
+    <div id="qualityChecks">
+      <label class="check-row"><input type="checkbox" class="quality-check"> Every main page has a clear purpose and introduction.</label>
+      <label class="check-row"><input type="checkbox" class="quality-check"> The navigation matches the intended page hierarchy.</label>
+      <label class="check-row"><input type="checkbox" class="quality-check"> Related pages link to one another where useful.</label>
+      <label class="check-row"><input type="checkbox" class="quality-check"> No duplicate pages or unnecessary repeated explanations remain.</label>
+      <label class="check-row"><input type="checkbox" class="quality-check"> External links lead to the correct destinations.</label>
+      <label class="check-row"><input type="checkbox" class="quality-check"> Images, embeds and interactive tools work on the published site.</label>
+      <label class="check-row"><input type="checkbox" class="quality-check"> Text and navigation work on mobile devices.</label>
+      <label class="check-row"><input type="checkbox" class="quality-check"> The final published version has been checked.</label>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-heading">
+      <div>
+        <h2>07. Save your work</h2>
+        <p class="muted">Your changes are stored in this browser. Export backups before clearing browser data or changing devices.</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="exportBackup()">Download JSON backup</button>
+      <button class="btn secondary" onclick="document.getElementById('importFile').click()">Import JSON backup</button>
+      <button class="btn secondary" onclick="window.print()">Print / Save as PDF</button>
+      <button class="btn danger" onclick="resetPlanner()">Reset planner</button>
+      <input type="file" id="importFile" accept=".json,application/json" hidden>
+    </div>
+    <p class="small" id="saveStatus" aria-live="polite">Changes are saved automatically in this browser when local storage is available.</p>
+  </div>
+</main>
+
+<footer>
+  <p>Site Editing Command Center • Planning prototype. It does not connect directly to Google Sites, inspect your private editor, or publish edits on your behalf.</p>
+</footer>
+
+<script>
+const STORAGE_KEY = "siteEditingCommandCenter_v1";
+
+const initialPages = [
+  {name:"Home", parent:"—", action:"Keep", status:"Not started", url:""},
+  {name:"Opportunity Atlas", parent:"Home", action:"Review", status:"Not started", url:""},
+  {name:"Residency", parent:"Opportunity Atlas", action:"Review", status:"Not started", url:""},
+  {name:"Startup", parent:"Opportunity Atlas", action:"Review", status:"Not started", url:""},
+  {name:"Accelerator", parent:"Opportunity Atlas", action:"Review", status:"Not started", url:""},
+  {name:"Funding", parent:"Opportunity Atlas", action:"Review", status:"Not started", url:""},
+  {name:"Scholarship", parent:"Opportunity Atlas", action:"Review", status:"Not started", url:""},
+  {name:"Fellowship", parent:"Opportunity Atlas", action:"Review", status:"Not started", url:""},
+  {name:"Mentorship", parent:"Opportunity Atlas", action:"Review", status:"Not started", url:""},
+  {name:"Internship", parent:"Opportunity Atlas", action:"Review", status:"Not started", url:""},
+  {name:"Volunteering", parent:"Opportunity Atlas", action:"Review", status:"Not started", url:""},
+  {name:"Education", parent:"Opportunity Atlas", action:"Review", status:"Not started", url:""},
+  {name:"Technology", parent:"Opportunity Atlas", action:"Review", status:"Not started", url:""},
+  {name:"Mobility", parent:"Opportunity Atlas", action:"Review", status:"Not started", url:""},
+  {name:"Certificates", parent:"Education", action:"Review", status:"Not started", url:""},
+  {name:"Study Abroad", parent:"Education", action:"Review", status:"Not started", url:""},
+  {name:"Competitions", parent:"Education", action:"Review", status:"Not started", url:""},
+  {name:"Intelligence Center", parent:"Home", action:"Review", status:"Not started", url:""},
+  {name:"Location Power Differential Mapping", parent:"Intelligence Center", action:"Review", status:"Not started", url:""},
+  {name:"Search Opportunities by Category and Location", parent:"Location Power Differential Mapping", action:"Review", status:"Not started", url:""},
+  {name:"Resource Vault", parent:"Home", action:"Review", status:"Not started", url:""},
+  {name:"Resource Intelligence Center", parent:"Resource Vault", action:"Review", status:"Not started", url:""},
+  {name:"Problem Solving Center", parent:"Home", action:"Review", status:"Not started", url:""},
+  {name:"Career Intelligence Lab", parent:"Home", action:"Review", status:"Not started", url:""},
+  {name:"Focus Champions", parent:"Home", action:"Review", status:"Not started", url:""},
+  {name:"WorkProof", parent:"Home", action:"Review", status:"Not started", url:""},
+  {name:"Evidence Block", parent:"WorkProof", action:"Review", status:"Not started", url:""},
+  {name:"Elevate Learning Network v3", parent:"Home", action:"Review", status:"Not started", url:""},
+  {name:"Portfolio Operator / PortfolioOS", parent:"Career Intelligence Lab", action:"Review", status:"Not started", url:""},
+  {name:"Career Planning", parent:"Home", action:"Review", status:"Not started", url:""},
+  {name:"Execution & Progress", parent:"Career Planning", action:"Review", status:"Not started", url:""},
+  {name:"About & How to Use", parent:"Home", action:"Review", status:"Not started", url:""}
+];
+
+let state = {
+  pages: initialPages.map(page => ({...page})),
+  days: [false,false,false,false,false,false],
+  quality: Array(8).fill(false)
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed.pages) &&
+          Array.isArray(parsed.days) &&
+          Array.isArray(parsed.quality)) {
+        state = parsed;
+      }
+    }
+  } catch (e) {
+    console.warn("Could not load saved planner data.");
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    document.getElementById("saveStatus").textContent =
+      "Saved locally in this browser.";
+  } catch (e) {
+    document.getElementById("saveStatus").textContent =
+      "Browser storage is unavailable. Download a JSON backup to preserve your work.";
+  }
+  updateStats();
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;",
+    '"':"&quot;", "'":"&#39;"
+  })[char]);
+}
+
+function renderPages() {
+  const tbody = document.getElementById("pageRows");
+  tbody.innerHTML = "";
+
+  if (!state.pages.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty">No pages yet. Add a page below.</td></tr>';
+    updateStats();
+    return;
+  }
+
+  state.pages.forEach((page, index) => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td><input aria-label="Page title" data-field="name" data-index="${index}" value="${escapeHTML(page.name)}"></td>
+      <td><input aria-label="Parent page" data-field="parent" data-index="${index}" value="${escapeHTML(page.parent)}"></td>
+      <td>
+        <select aria-label="Editing decision" data-field="action" data-index="${index}">
+          ${["Keep","Rename","Merge","Move","Create","Review","Remove"].map(v =>
+            `<option ${page.action===v?"selected":""}>${v}</option>`).join("")}
+        </select>
+      </td>
+      <td>
+        <select aria-label="Page status" data-field="status" data-index="${index}">
+          ${["Not started","In progress","Completed","Blocked"].map(v =>
+            `<option ${page.status===v?"selected":""}>${v}</option>`).join("")}
+        </select>
+      </td>
+      <td><input aria-label="Existing page URL" data-field="url" data-index="${index}" placeholder="Paste published URL" value="${escapeHTML(page.url)}"></td>
+      <td class="no-print"><button class="btn danger" data-remove="${index}" aria-label="Remove ${escapeHTML(page.name)}">×</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  updateStats();
+}
+
+function updateStats() {
+  const total = state.pages.length;
+  const completed = state.pages.filter(p => p.status === "Completed").length;
+  const completedDays = state.days.filter(Boolean).length;
+  const completedQuality = state.quality.filter(Boolean).length;
+  const timelinePct = Math.round(completedDays / state.days.length * 100);
+  const qualityPct = Math.round(completedQuality / state.quality.length * 100);
+  const pagePct = total ? Math.round(completed / total * 100) : 0;
+  const overall = Math.round((pagePct + timelinePct + qualityPct) / 3);
+
+  document.getElementById("pageCount").textContent = total;
+  document.getElementById("completedCount").textContent = completed;
+  document.getElementById("taskCount").textContent = timelinePct + "%";
+  document.getElementById("hoursCount").textContent =
+    Math.max(0, Math.round((state.days.length - completedDays) * 2.5));
+
+  document.getElementById("overallProgress").style.width = overall + "%";
+  document.getElementById("overallLabel").textContent =
+    `Combined planning progress: ${overall}% (page completion, timeline and quality checks).`;
+  document.getElementById("timelineBadge").textContent =
+    `${completedDays} of ${state.days.length} days`;
+}
+
+document.getElementById("pageRows").addEventListener("change", event => {
+  const field = event.target.dataset.field;
+  const index = Number(event.target.dataset.index);
+  if (!field || !Number.isInteger(index) || !state.pages[index]) return;
+  state.pages[index][field] = event.target.value.trim();
+  saveState();
+  renderPages();
+});
+
+document.getElementById("pageRows").addEventListener("click", event => {
+  const button = event.target.closest("[data-remove]");
+  if (!button) return;
+  const index = Number(button.dataset.remove);
+  if (!Number.isInteger(index) || !state.pages[index]) return;
+
+  const name = state.pages[index].name || "this page";
+  if (!confirm(`Remove "${name}" from this planner inventory? This does not delete the actual Google Sites page.`)) return;
+
+  state.pages.splice(index, 1);
+  saveState();
+  renderPages();
+});
+
+document.getElementById("addPageForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const name = document.getElementById("newPageName").value.trim();
+  const parent = document.getElementById("newPageParent").value;
+  const action = document.getElementById("newPageAction").value;
+  if (!name) return;
+
+  state.pages.push({
+    name, parent, action,
+    status:"Not started",
+    url:""
+  });
+
+  event.target.reset();
+  saveState();
+  renderPages();
+});
+
+document.querySelectorAll(".day-check").forEach((checkbox, index) => {
+  checkbox.addEventListener("change", () => {
+    state.days[index] = checkbox.checked;
+    checkbox.closest(".day").classList.toggle("completed", checkbox.checked);
+    saveState();
+  });
+});
+
+document.querySelectorAll(".quality-check").forEach((checkbox, index) => {
+  checkbox.addEventListener("change", () => {
+    state.quality[index] = checkbox.checked;
+    saveState();
+  });
+});
+
+function downloadFile(filename, content, type) {
+  const blob = new Blob([content], {type});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function exportPages() {
+  const headers = ["Page title","Parent","Action","Status","Existing URL"];
+  const rows = state.pages.map(p => [p.name,p.parent,p.action,p.status,p.url]);
+  const csv = [headers, ...rows].map(row =>
+    row.map(value => `"${String(value ?? "").replace(/"/g,'""')}"`).join(",")
+  ).join("\r\n");
+
+  downloadFile("site-page-inventory.csv", csv, "text/csv;charset=utf-8;");
+}
+
+function exportBackup() {
+  downloadFile(
+    "site-editing-planner-backup.json",
+    JSON.stringify(state, null, 2),
+    "application/json"
+  );
+}
+
+document.getElementById("importFile").addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  try {
+    const imported = JSON.parse(await file.text());
+    if (!Array.isArray(imported.pages) ||
+        !Array.isArray(imported.days) ||
+        !Array.isArray(imported.quality)) {
+      throw new Error("Invalid backup structure");
+    }
+
+    if (!confirm("Replace the current planner data with this backup?")) return;
+
+    state = imported;
+    state.days = Array.from({length:6}, (_,i) => Boolean(state.days[i]));
+    state.quality = Array.from({length:8}, (_,i) => Boolean(state.quality[i]));
+
+    saveState();
+    renderPages();
+    restoreChecks();
+  } catch (error) {
+    alert("This file could not be imported as a valid planner backup.");
+  } finally {
+    event.target.value = "";
+  }
+});
+
+function restoreChecks() {
+  document.querySelectorAll(".day-check").forEach((checkbox, index) => {
+    checkbox.checked = Boolean(state.days[index]);
+    checkbox.closest(".day").classList.toggle("completed", checkbox.checked);
+  });
+
+  document.querySelectorAll(".quality-check").forEach((checkbox, index) => {
+    checkbox.checked = Boolean(state.quality[index]);
+  });
+
+  updateStats();
+}
+
+function resetPlanner() {
+  if (!confirm("Reset all page inventory, timeline and quality-check progress? Export a backup first if needed.")) return;
+
+  state = {
+    pages: initialPages.map(page => ({...page})),
+    days: Array(6).fill(false),
+    quality: Array(8).fill(false)
+  };
+
+  saveState();
+  renderPages();
+  restoreChecks();
+}
+
+loadState();
+renderPages();
+restoreChecks();
+</script>
+</body>
+</html>
